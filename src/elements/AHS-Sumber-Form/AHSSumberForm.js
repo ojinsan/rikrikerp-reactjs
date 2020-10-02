@@ -11,17 +11,20 @@ import {
     Select,
     DatePicker,
     InputNumber,
+    Spin,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 
 // IMPORT: Utilities
 import { globalVariable } from "../../utils/global-variable";
 
 // IMPORT: Other Components
+import { LoadingSpinner } from "../../components";
 
 // SETUP: Initial
 const hostname = globalVariable("backendAddress");
 const { Option } = Select;
+var AHSform = null; // form reference
 
 // ===================== MAIN COMPONENT ====================
 const AHSSumberForm = (props) => {
@@ -29,11 +32,19 @@ const AHSSumberForm = (props) => {
     const [namaAHS, setNamaAHS] = useState("");
     const [nomorAHS, setNomorAHS] = useState("");
     const [satuanAHS, setSatuanAHS] = useState("");
-    const [AHSkhusus, setAHSkhusus] = useState(false);
+    const [AHSkhusus, setAHSkhusus] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    console.log(AHSkhusus);
+    const resetForm = () => {
+        setSumberAHS("");
+        setNamaAHS("");
+        setNomorAHS("");
+        setSatuanAHS("");
+        setAHSkhusus(null);
+        AHSform.resetFields();
+    };
 
-    const onSubmit = async () => {
+    const onSubmit = () => {
         const ahs = {
             NAMA_AHS: namaAHS,
             NOMOR_AHS: nomorAHS,
@@ -44,24 +55,50 @@ const AHSSumberForm = (props) => {
             KHUSUS: AHSkhusus,
         };
 
-        const response = await fetch(
-            hostname + "/data-source/post-new-ahs-sumber-utama/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(ahs),
+        AHSform.validateFields([
+            "namaAHS",
+            "sumberAHS",
+            "satuanAHS",
+            "nomorAHS",
+            "AHSkhusus",
+        ]).then(async (x) => {
+            setIsLoading(true);
+            console.log("validating: ");
+            console.log(x);
+            try {
+                const response = await fetch(
+                    hostname + "/data-source/post-new-ahs-sumber-utama/",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(ahs),
+                    }
+                );
+                if (response.ok) {
+                    const responseBody = await response.json();
+                    console.log(responseBody);
+                    resetForm();
+                    props.onClose();
+                } else {
+                    throw new Error(
+                        "Gagal menyimpan dalam database. Status:" +
+                            response.status
+                    );
+                }
+            } catch (err) {
+                alert(err); // TypeError: failed to fetch
+                console.log(err);
             }
-        );
-        const responseBody = await response.json();
-        console.log(responseBody);
+            setIsLoading(false);
+        });
     };
 
     return (
-        <>
+        <div>
             <Drawer
-                title="Create a new AHS"
+                title="Create New AHS Record"
                 width={720}
                 onClose={props.onClose}
                 visible={props.visible}
@@ -72,26 +109,37 @@ const AHSSumberForm = (props) => {
                             textAlign: "right",
                         }}
                     >
-                        <Button
-                            onClick={props.onClose}
-                            style={{ marginRight: 8 }}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                onSubmit().then(() => {
-                                    props.onClose();
-                                });
-                            }}
-                            type="primary"
-                        >
-                            Submit
-                        </Button>
+                        {isLoading ? (
+                            <LoadingSpinner isOverlay={false} />
+                        ) : (
+                            <div>
+                                <Button
+                                    onClick={props.onClose}
+                                    style={{ marginRight: 8 }}
+                                >
+                                    Cancel
+                                </Button>
+
+                                <Button
+                                    onClick={() => {
+                                        onSubmit();
+                                    }}
+                                    type="primary"
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 }
             >
-                <Form layout="vertical" hideRequiredMark>
+                <Form
+                    layout="vertical"
+                    hideRequiredMark
+                    ref={(el) => {
+                        AHSform = el;
+                    }}
+                >
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
@@ -148,6 +196,7 @@ const AHSSumberForm = (props) => {
                                 <InputNumber
                                     style={{ width: "100%" }}
                                     placeholder="Bil. bulat"
+                                    value={nomorAHS}
                                     onChange={(e) => setNomorAHS(e)}
                                 />
                             </Form.Item>
@@ -166,6 +215,7 @@ const AHSSumberForm = (props) => {
                                 <Input
                                     style={{ width: "100%" }}
                                     placeholder="Satuan"
+                                    value={satuanAHS}
                                     onChange={(e) =>
                                         setSatuanAHS(e.target.value)
                                     }
@@ -186,6 +236,7 @@ const AHSSumberForm = (props) => {
                                 <Select
                                     placeholder="Select"
                                     onChange={(e) => setAHSkhusus(e)}
+                                    value={AHSkhusus}
                                 >
                                     <Option value="true">YA</Option>
                                     <Option value="false">TIDAK</Option>
@@ -195,7 +246,7 @@ const AHSSumberForm = (props) => {
                     </Row>
                 </Form>
             </Drawer>
-        </>
+        </div>
     );
 };
 

@@ -14,7 +14,6 @@ import { PlusOutlined } from "@ant-design/icons";
 
 const AHSSumber = (props) => {
     const [showAHSSumberForm, setShowAHSSumberForm] = useState(false);
-    console.log(showAHSSumberForm);
 
     return (
         <>
