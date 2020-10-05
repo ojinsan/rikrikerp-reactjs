@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { AHSSumberForm } from "../../elements";
+import {
+    AHSSumberForm,
+    AHSSumberTableOld,
+    AHSSumberTable,
+} from "../../elements";
 import {
     Drawer,
     Form,
@@ -29,6 +33,9 @@ const AHSSumber = (props) => {
                     <PlusOutlined /> New AHS Sumber Record
                 </Button>
             </div>
+
+            <AHSSumberTable />
+
             <AHSSumberForm
                 showDrawer={() => {
                     setShowAHSSumberForm(true);
