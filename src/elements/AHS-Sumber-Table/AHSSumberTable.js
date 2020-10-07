@@ -430,7 +430,7 @@ const AHSSumberTable = () => {
             .then((response) => {
                 console.log(response);
                 var tableData = response.AHS.map((ahs, idx) => {
-                    return {
+                    const data = {
                         id: ahs.ID_AHS_SUMBER_UTAMA,
                         isAHS: true,
                         key: idx.toString(),
@@ -454,6 +454,11 @@ const AHSSumberTable = () => {
                             };
                         }),
                     };
+                    console.log(data.children);
+                    if (data.children.length == 0) {
+                        delete data.children;
+                    }
+                    return data;
                 });
                 return tableData;
             })

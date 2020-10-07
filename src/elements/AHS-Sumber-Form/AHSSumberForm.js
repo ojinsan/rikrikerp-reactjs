@@ -37,7 +37,6 @@ const AHSSumberForm = (props) => {
     const [nomorAHS, setNomorAHS] = useState("");
     const [satuanAHS, setSatuanAHS] = useState("");
     const [AHSkhusus, setAHSkhusus] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
     const [AHSDetails, setAHSDetails] = useState([]);
 
     const [namaAHSD, setNamaAHSD] = useState("");
@@ -46,6 +45,8 @@ const AHSSumberForm = (props) => {
     const [koefisienAHSD, setKoefisienAHSD] = useState("");
     const [kodeUraianAHSD, setKodeUraianAHSD] = useState("");
     const [deskripsiAHSD, setDeskripsiAHSD] = useState("");
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const resetForm = () => {
         setSumberAHS("");
