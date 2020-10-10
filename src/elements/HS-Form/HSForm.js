@@ -59,8 +59,8 @@ const HSForm = (props) => {
             SATUAN: satuan,
             HARGA: harga,
             TYPE: type,
-            ID_WILAYAH: idWilayah,
-            TAHUN: tahun,
+            ID_WILAYAH: props.wilayahProject,
+            TAHUN: props.tahun,
             SUMBER_HARGA: sumberHarga,
             KETERANGAN: keterangan,
             SCREENSHOT_HS: screenshotHS,
@@ -71,8 +71,6 @@ const HSForm = (props) => {
             "satuan",
             "harga",
             "type",
-            "idWilayah",
-            "tahun",
             "sumberHarga",
             "keterangan",
             "screenshotHS",
@@ -108,10 +106,18 @@ const HSForm = (props) => {
             });
     };
 
+    console.log(props.tahun);
+    console.log(props.wilayahProject);
+
     return (
         <div>
             <Drawer
-                title="Create New HS Record"
+                title={
+                    "Create New HS Record," +
+                    props.tahun +
+                    " " +
+                    props.wilayahProject
+                }
                 width={720}
                 onClose={props.onClose}
                 visible={props.visible}
@@ -255,50 +261,6 @@ const HSForm = (props) => {
                         </Col>
                     </Row>
 
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="wilayah"
-                                label="Wilayah"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Wilayah",
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    placeholder="Select"
-                                    onChange={(e) => setIdWilayah(e)}
-                                    value={type}
-                                >
-                                    <Option value="1">Jakarta</Option>
-                                    <Option value="2">Bandung</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="tahun"
-                                label="Tahun"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Tahun harus terisi",
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    placeholder="Select"
-                                    onChange={(e) => setTahun(e)}
-                                    value={type}
-                                >
-                                    <Option value="2010">2010</Option>
-                                    <Option value="2011">2011</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                    </Row>
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item

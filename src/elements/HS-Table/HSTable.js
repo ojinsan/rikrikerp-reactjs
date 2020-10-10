@@ -49,7 +49,7 @@ const EditableCell = ({
     );
 };
 
-const HSTable = () => {
+const HSTable = (props) => {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState("");
@@ -75,24 +75,88 @@ const HSTable = () => {
         setEditingKey("");
     };
 
-    const save = async (key) => {
+    const save = async (key, controller) => {
         try {
             const row = await form.validateFields();
             const newData = [...data];
             const index = newData.findIndex((item) => key === item.key);
 
+            const editedContent = {
+                ID_HS: row.idHS,
+                URAIAN: row.uraian,
+                SATUAN: row.satuan,
+                HARGA: row.harga,
+                TYPE: row.kelompok,
+                //ID_WILAYAH: "1",
+                TAHUN: props.tahun,
+                SUMBER_HARGA: row.sumberHarga,
+                KETERANGAN: row.keterangan,
+                SCREENSHOT_HS: row.screenshot,
+            };
+
+            console.log(editedContent);
+
             if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
+                fetch(hostname + "/data-source/update-hs", {
+                    signal: controller.signal,
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(editedContent),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            const item = newData[index];
+                            newData.splice(index, 1, { ...item, ...row });
+                            setData(newData);
+                        }
+                    })
+                    .catch((error) => console.log(error));
+
                 setEditingKey("");
             } else {
-                newData.push(row);
-                setData(newData);
+                console.log("Index not found, failed to edit");
+                //newData.push(row);
+                //setData(newData);
                 setEditingKey("");
             }
         } catch (errInfo) {
             console.log("Validate Failed:", errInfo);
+        }
+    };
+
+    const handleDelete = (key, controller) => {
+        console.log(key);
+        // try {
+        const newData = [...data];
+        const keysTemp = key.split("-");
+        console.log("utama delete");
+        const index = newData.findIndex((item) => key === item.key);
+        if (index > -1) {
+            console.log("ketemu");
+            fetch(hostname + "/data-source/delete-hs", {
+                signal: controller.signal,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    TAHUN: props.tahun,
+                    ID_HS: newData[index].idHS,
+                }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        newData.splice(index, 1);
+                        setData(newData);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            console.log("situ");
         }
     };
 
@@ -153,8 +217,11 @@ const HSTable = () => {
                 return editable ? (
                     <span>
                         <a
-                            //href="javascript:;"
-                            onClick={() => save(record.key)}
+                            onClick={() => {
+                                const controller = new AbortController();
+                                save(record.key, controller);
+                                return () => controller.abort();
+                            }}
                             style={{
                                 marginRight: 8,
                             }}
@@ -166,12 +233,24 @@ const HSTable = () => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <a
-                        disabled={editingKey !== ""}
-                        onClick={() => edit(record)}
-                    >
-                        Edit
-                    </a>
+                    <div>
+                        <a
+                            disabled={editingKey !== ""}
+                            onClick={() => edit(record)}
+                        >
+                            Edit
+                        </a>
+                        <Popconfirm
+                            title="Sure to delete?"
+                            onConfirm={() => {
+                                const controller = new AbortController();
+                                handleDelete(record.key, controller);
+                                return () => controller.abort();
+                            }}
+                        >
+                            <a> Delete </a>
+                        </Popconfirm>
+                    </div>
                 );
             },
         },
@@ -193,13 +272,16 @@ const HSTable = () => {
         };
     });
 
+    console.log(props.tahun);
+    console.log(props.wilayahProject);
+
     useEffect(() => {
         fetch(
             hostname +
                 "/data-source/get-hs-specific-group-by-wilayah?TAHUN=" +
-                "2010" +
+                props.tahun +
                 "&ID_WILAYAH=" +
-                "1",
+                props.wilayahProject,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -212,33 +294,34 @@ const HSTable = () => {
                 console.log(response);
                 var j = 0;
                 var tableData = [];
-                response.Wilayah.forEach((wilayah) => {
-                    tableData.push(
-                        ...wilayah.HS.map((hs, idx) => {
-                            const data = {
-                                idHS: hs.ID_HS,
-                                uraian: hs.URAIAN,
-                                satuan: hs.SATUAN,
-                                harga: hs.HARGA,
-                                kelompok: hs.TYPE,
-                                sumberHarga: hs.SUMBER_HARGA,
-                                keterangan: hs.KETERANGAN,
-                                screenshotHS: hs.SCREENSHOT_HS,
-                                key: j.toString(),
-                                // ID_WILAYAH
-                            };
-                            j++;
-                            return data;
-                        })
-                    );
-                });
+                response.Wilayah &&
+                    response.Wilayah.forEach((wilayah) => {
+                        tableData.push(
+                            ...wilayah.HS.map((hs, idx) => {
+                                const data = {
+                                    idHS: hs.ID_HS,
+                                    uraian: hs.URAIAN,
+                                    satuan: hs.SATUAN,
+                                    harga: hs.HARGA,
+                                    kelompok: hs.TYPE,
+                                    sumberHarga: hs.SUMBER_HARGA,
+                                    keterangan: hs.KETERANGAN,
+                                    screenshot: hs.SCREENSHOT_HS,
+                                    key: j.toString(),
+                                    // ID_WILAYAH
+                                };
+                                j++;
+                                return data;
+                            })
+                        );
+                    });
                 return tableData;
             })
             .then((tableData) => {
                 console.log(tableData);
                 setData(tableData);
             });
-    }, []);
+    }, [props.tahun, props.wilayahProject]);
 
     return (
         <Form form={form} component={false}>

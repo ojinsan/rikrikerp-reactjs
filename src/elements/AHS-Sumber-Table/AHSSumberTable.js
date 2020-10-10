@@ -127,6 +127,7 @@ const AHSSumberTable = () => {
     };
 
     const handleDelete = (key) => {
+        console.log(key);
         try {
             const newData = [...data];
             const keysTemp = key.split("-");
@@ -134,7 +135,9 @@ const AHSSumberTable = () => {
                 var childIndex = null;
                 const index = newData.findIndex((item) => {
                     if (item.children !== undefined && item.children !== null) {
+                        console.log(item);
                         childIndex = item.children.findIndex((child) => {
+                            console.log(child);
                             return key === child.key;
                         });
                         if (childIndex === -1) {
@@ -143,17 +146,18 @@ const AHSSumberTable = () => {
                             return true;
                         }
                     } else {
+                        // ga mungkin kesini harusnya
+                        console.log("it's weird");
                         return key === item.key;
                     }
                 });
+
                 console.log(index);
                 console.log(childIndex);
 
                 if (index > -1) {
-                    console.log("sini");
-
-                    delete newData[index].children[childIndex];
-
+                    console.log("jol delete");
+                    newData[index].children.splice(childIndex, 1);
                     setData(newData);
                 } else {
                     console.log("situ");
@@ -163,8 +167,7 @@ const AHSSumberTable = () => {
                 const index = newData.findIndex((item) => key === item.key);
                 if (index > -1) {
                     console.log("ketemu");
-
-                    delete newData[index];
+                    newData.splice(index, 1);
                     setData(newData);
                 } else {
                     console.log("situ");
@@ -174,47 +177,48 @@ const AHSSumberTable = () => {
             console.log("Validate Failed:", errInfo);
         }
 
-        const keysTemp = key.split("-");
-        const dataSource = [...data];
-        if (keysTemp.length == 2) {
-            const index = dataSource.findIndex((item) => {
-                if (item.children !== undefined && item.children !== null) {
-                    const childIndex = item.children.findIndex(
-                        (child) => key === child.key
-                    );
-                    if (childIndex == null) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else {
-                    return key === item.key;
-                }
-            });
+        // const keysTemp = key.split("-");
+        // console.log(keysTemp);
+        // const dataSource = [...data];
+        // if (keysTemp.length == 2) {
+        //     const index = dataSource.findIndex((item) => {
+        //         if (item.children !== undefined && item.children !== null) {
+        //             const childIndex = item.children.findIndex(
+        //                 (child) => key === child.key
+        //             );
+        //             if (childIndex == null) {
+        //                 return false;
+        //             } else {
+        //                 return true;
+        //             }
+        //         } else {
+        //             return key === item.key;
+        //         }
+        //     });
 
-            console.log(index);
+        //     console.log(index);
 
-            dataSource[index].children = dataSource[index].children.filter(
-                (child) => {
-                    console.log(child.key);
-                    console.log(key);
-                    return child.key !== key;
-                }
-            );
+        //     dataSource[index].children = dataSource[index].children.filter(
+        //         (child) => {
+        //             console.log(child.key);
+        //             console.log(key);
+        //             return child.key !== key;
+        //         }
+        //     );
 
-            console.log(dataSource[index].children);
-            if (dataSource[index].children.length == 0) {
-                console.log("nah");
-                delete dataSource[index]["children"];
-            }
+        //     console.log(dataSource[index].children);
+        //     if (dataSource[index].children.length == 0) {
+        //         console.log("nah");
+        //         delete dataSource[index]["children"];
+        //     }
 
-            console.log(key);
-            console.log(dataSource);
+        //     console.log(key);
+        //     console.log(dataSource);
 
-            setData(dataSource);
-        } else {
-            setData(dataSource.filter((item) => item.key !== key));
-        }
+        //     setData(dataSource);
+        // } else {
+        //     setData(dataSource.filter((item) => item.key !== key));
+        // }
     };
 
     const save = async (key) => {
@@ -454,7 +458,6 @@ const AHSSumberTable = () => {
                             };
                         }),
                     };
-                    console.log(data.children);
                     if (data.children.length == 0) {
                         delete data.children;
                     }

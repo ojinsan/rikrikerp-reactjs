@@ -18,7 +18,7 @@ const AHSProject = (props) => {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h4>This is AHS Sumber</h4>
+                <h4>This is AHS Project</h4>
                 <Button
                     type="primary"
                     className="d-flex p-2 align-items-center"
@@ -26,7 +26,7 @@ const AHSProject = (props) => {
                         setShowAHSProjectForm(!showAHSProjectForm);
                     }}
                 >
-                    <PlusOutlined /> New AHS Project Record
+                    <PlusOutlined /> Import From AHS Sumber
                 </Button>
             </div>
 
@@ -41,6 +41,8 @@ const AHSProject = (props) => {
                 }}
                 visible={showAHSProjectForm}
             />
+
+            <AHSProjectTable />
         </>
     );
 };
