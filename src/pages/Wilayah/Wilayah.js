@@ -1,7 +1,90 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+    HSTable,
+    HSForm,
+    HSWilayahTahunSelector,
+    HSSort,
+} from "../../elements";
+import { SortBox } from "../../components";
+
+import { globalVariable } from "../../utils/global-variable";
+
+// IMPORT: Material Kit from ant-design
+import {
+    Drawer,
+    Form,
+    Button,
+    Col,
+    Row,
+    Input,
+    Select,
+    DatePicker,
+    InputNumber,
+    Spin,
+    Collapse,
+    List,
+} from "antd";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import { WilayahForm } from "../../elements";
+
+const hostname = globalVariable("backendAddress");
 
 const Wilayah = () => {
-    return <div></div>;
+    const [showWilayahForm, setShowWilayahForm] = useState(false);
+    const [wilayah, setWilayah] = useState([]);
+
+    useEffect(() => {
+        fetch(hostname + "/base/get-wilayah-full-data", {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                var tableData = [];
+                response.wilayah &&
+                    (tableData = response.wilayah.map((item) => {
+                        return {
+                            wilayah: item.WILAYAH,
+                            divreDaop: item.DIVRE_DAOP,
+                            kecamatan: item.KECAMATAN,
+                            kabupatenKotamadya: item.KABUPATEN_KOTAMADYA,
+                            provinsi: item.PROVINSI,
+                        };
+                    }));
+                return tableData;
+            })
+            .then((tableData) => {
+                setWilayah(tableData);
+            });
+    }, []);
+
+    return (
+        <div>
+            <div className="d-flex justify-content-between align-items-center">
+                <h4>This is HS</h4>
+                <Button
+                    type="primary"
+                    className="d-flex p-2 align-items-center"
+                    onClick={() => {
+                        setShowWilayahForm(!showWilayahForm);
+                    }}
+                >
+                    <PlusOutlined /> New Wilayah Record
+                </Button>
+            </div>
+            <WilayahForm
+                showDrawer={() => {
+                    setShowWilayahForm(true);
+                }}
+                onClose={() => {
+                    setShowWilayahForm(false);
+                }}
+                visible={showWilayahForm}
+            />
+        </div>
+    );
 };
 
 export default Wilayah;

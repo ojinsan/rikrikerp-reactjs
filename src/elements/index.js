@@ -15,6 +15,8 @@ import AHSProjectTable from "./AHS-Project-Table/AHSProjectTable";
 import ProjectForm from "./Project-Form/ProjectForm";
 import RABProjectBagianForm from "./RAB-Project-Bagian-Form/RABProjectBagianForm";
 
+import WilayahForm from "./Wilayah-Form/WilayahForm";
+
 export {
     Sidebar,
     AHSSumberForm,
@@ -29,4 +31,5 @@ export {
     AHSProjectTable,
     ProjectForm,
     RABProjectBagianForm,
+    WilayahForm,
 };
