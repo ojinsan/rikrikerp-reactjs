@@ -51,7 +51,7 @@ const EditableCell = ({
 
 const HSTable = (props) => {
     const [form] = Form.useForm();
-    const [data, setData] = useState([]);
+    //const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState("");
 
     const isEditing = (record) => record.key === editingKey;
@@ -78,7 +78,7 @@ const HSTable = (props) => {
     const save = async (key, controller) => {
         try {
             const row = await form.validateFields();
-            const newData = [...data];
+            const newData = [...props.data];
             const index = newData.findIndex((item) => key === item.key);
 
             const editedContent = {
@@ -109,7 +109,7 @@ const HSTable = (props) => {
                         if (response.ok) {
                             const item = newData[index];
                             newData.splice(index, 1, { ...item, ...row });
-                            setData(newData);
+                            props.setData(newData);
                         }
                     })
                     .catch((error) => console.log(error));
@@ -129,7 +129,7 @@ const HSTable = (props) => {
     const handleDelete = (key, controller) => {
         console.log(key);
         // try {
-        const newData = [...data];
+        const newData = [...props.data];
         const keysTemp = key.split("-");
         console.log("utama delete");
         const index = newData.findIndex((item) => key === item.key);
@@ -149,7 +149,7 @@ const HSTable = (props) => {
                 .then((response) => {
                     if (response.ok) {
                         newData.splice(index, 1);
-                        setData(newData);
+                        props.setData(newData);
                     }
                 })
                 .catch((err) => {
@@ -272,56 +272,9 @@ const HSTable = (props) => {
         };
     });
 
-    console.log(props.tahun);
-    console.log(props.wilayahProject);
+    console.log(props.tahun, props.wilayahProject);
 
-    useEffect(() => {
-        fetch(
-            hostname +
-                "/data-source/get-hs-specific-group-by-wilayah?TAHUN=" +
-                props.tahun +
-                "&ID_WILAYAH=" +
-                props.wilayahProject,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-            }
-        )
-            .then((response) => response.json())
-            .then((response) => {
-                console.log(response);
-                var j = 0;
-                var tableData = [];
-                response.Wilayah &&
-                    response.Wilayah.forEach((wilayah) => {
-                        tableData.push(
-                            ...wilayah.HS.map((hs, idx) => {
-                                const data = {
-                                    idHS: hs.ID_HS,
-                                    uraian: hs.URAIAN,
-                                    satuan: hs.SATUAN,
-                                    harga: hs.HARGA,
-                                    kelompok: hs.TYPE,
-                                    sumberHarga: hs.SUMBER_HARGA,
-                                    keterangan: hs.KETERANGAN,
-                                    screenshot: hs.SCREENSHOT_HS,
-                                    key: j.toString(),
-                                    // ID_WILAYAH
-                                };
-                                j++;
-                                return data;
-                            })
-                        );
-                    });
-                return tableData;
-            })
-            .then((tableData) => {
-                console.log(tableData);
-                setData(tableData);
-            });
-    }, [props.tahun, props.wilayahProject]);
+    useEffect(() => {}, [props.tahun, props.wilayahProject, props.data]);
 
     return (
         <Form form={form} component={false}>
@@ -332,7 +285,7 @@ const HSTable = (props) => {
                     },
                 }}
                 bordered
-                dataSource={data}
+                dataSource={props.data}
                 columns={mergedColumns}
                 rowClassName="editable-row"
                 pagination={{

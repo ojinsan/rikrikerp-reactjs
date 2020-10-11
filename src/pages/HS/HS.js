@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { HSTable, HSForm, HSWilayahTahunSelector } from "../../elements";
+import {
+    HSTable,
+    HSForm,
+    HSWilayahTahunSelector,
+    HSSort,
+} from "../../elements";
+import { SortBox } from "../../components";
+
+import { globalVariable } from "../../utils/global-variable";
 
 // IMPORT: Material Kit from ant-design
 import {
@@ -18,10 +26,60 @@ import {
 } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 
+const hostname = globalVariable("backendAddress");
+
 const HS = (props) => {
     const [showHSForm, setShowHSForm] = useState(false);
     const [wilayahProject, setWilayahProject] = useState(null);
     const [tahun, setTahun] = useState(null);
+    const [data, setData] = useState([]);
+    const originData = data;
+
+    useEffect(() => {
+        fetch(
+            hostname +
+                "/data-source/get-hs-specific-group-by-wilayah?TAHUN=" +
+                tahun +
+                "&ID_WILAYAH=" +
+                wilayahProject,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            }
+        )
+            .then((response) => response.json())
+            .then((response) => {
+                var j = 0;
+                var tableData = [];
+                response.Wilayah &&
+                    response.Wilayah.forEach((wilayah) => {
+                        tableData.push(
+                            ...wilayah.HS.map((hs, idx) => {
+                                const data = {
+                                    idHS: hs.ID_HS,
+                                    uraian: hs.URAIAN,
+                                    satuan: hs.SATUAN,
+                                    harga: hs.HARGA,
+                                    kelompok: hs.TYPE,
+                                    sumberHarga: hs.SUMBER_HARGA,
+                                    keterangan: hs.KETERANGAN,
+                                    screenshot: hs.SCREENSHOT_HS,
+                                    key: j.toString(),
+                                    // ID_WILAYAH
+                                };
+                                j++;
+                                return data;
+                            })
+                        );
+                    });
+                return tableData;
+            })
+            .then((tableData) => {
+                setData(tableData);
+            });
+    }, [tahun, wilayahProject]);
 
     return (
         <>
@@ -49,8 +107,24 @@ const HS = (props) => {
                 )}
             </div>
 
+            <HSSort
+                onChange={(newDatas) => {
+                    const newDatasTemp = JSON.parse(JSON.stringify(newDatas));
+                    console.log(newDatasTemp);
+                    setData(newDatasTemp);
+                }}
+                datas={originData}
+            />
+            {/* <SortBox /> */}
             {tahun && wilayahProject && (
-                <HSTable tahun={tahun} wilayahProject={wilayahProject} />
+                <HSTable
+                    setData={(data) => {
+                        setData(data);
+                    }}
+                    data={data}
+                    tahun={tahun}
+                    wilayahProject={wilayahProject}
+                />
             )}
 
             {tahun && wilayahProject && (

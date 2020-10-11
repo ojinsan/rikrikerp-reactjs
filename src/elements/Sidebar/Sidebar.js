@@ -69,6 +69,9 @@ const Sidebar = (props) => {
                         <Menu.Item key="/hs">
                             <Link to="/hs">Harga Satuan</Link>
                         </Menu.Item>
+                        <Menu.Item key="/wilayah">
+                            <Link to="/wilayah">Wilayah</Link>
+                        </Menu.Item>
                     </SubMenu>
                     {/* <Menu.Item key="9" icon={<FileOutlined />} /> */}
                 </Menu>

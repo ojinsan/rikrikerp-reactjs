@@ -8,6 +8,7 @@ import {
     RAB,
     RABProjectBagian,
     Project,
+    Wilayah,
 } from "./pages";
 
 // const Dashboard = lazy(() => import('./dashboard/Dashboard'));
@@ -17,6 +18,7 @@ class AppRoutes extends Component {
             <Suspense>
                 {/* fallback={<Spinner />}> */}
                 <Switch>
+                    <Route exact path="/wilayah" component={Wilayah} />
                     <Route exact path="/ahs-sumber" component={AHSSumber} />
                     <Route exact path="/hs" component={HS} />
                     <Route

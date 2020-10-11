@@ -7,6 +7,7 @@ import AHSSumberDetailForm from "./AHS-Sumber-Detail-Form/AHSSumberDetailForm";
 import HSForm from "./HS-Form/HSForm";
 import HSTable from "./HS-Table/HSTable";
 import HSWilayahTahunSelector from "./HS-Wilayah-Tahun-Selector/HSWilayahTahunSelector";
+import HSSort from "./HS-Sort/HSSort";
 
 import AHSProjectForm from "./AHS-Project-Form/AHSProjectForm";
 import AHSProjectTable from "./AHS-Project-Table/AHSProjectTable";
@@ -22,6 +23,7 @@ export {
     AHSSumberDetailForm,
     HSForm,
     HSTable,
+    HSSort,
     HSWilayahTahunSelector,
     AHSProjectForm,
     AHSProjectTable,
