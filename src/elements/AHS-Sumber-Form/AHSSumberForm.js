@@ -36,7 +36,7 @@ const AHSSumberForm = (props) => {
     const [namaAHS, setNamaAHS] = useState("");
     const [nomorAHS, setNomorAHS] = useState("");
     const [satuanAHS, setSatuanAHS] = useState("");
-    const [AHSkhusus, setAHSkhusus] = useState(null);
+    const [AHSkhusus, setAHSkhusus] = useState("");
     const [AHSDetails, setAHSDetails] = useState([]);
 
     const [namaAHSD, setNamaAHSD] = useState("");
@@ -249,9 +249,9 @@ const AHSSumberForm = (props) => {
                                             },
                                         ]}
                                     >
-                                        <InputNumber
+                                        <Input
                                             style={{ width: "100%" }}
-                                            placeholder="Bil. bulat"
+                                            placeholder="Nomor"
                                             value={nomorAHS}
                                             onChange={(e) => setNomorAHS(e)}
                                         />
@@ -290,14 +290,16 @@ const AHSSumberForm = (props) => {
                                                     "Silahkan pilih salah satu",
                                             },
                                         ]}
+                                        initialValue={false}
                                     >
                                         <Select
                                             placeholder="Select"
                                             onChange={(e) => setAHSkhusus(e)}
-                                            value={AHSkhusus}
+                                            //value={AHSkhusus}
+                                            //defaultValue={AHSkhusus}
                                         >
-                                            <Option value="true">YA</Option>
-                                            <Option value="false">TIDAK</Option>
+                                            <Option value={true}>YA</Option>
+                                            <Option value={false}>TIDAK</Option>
                                         </Select>
                                     </Form.Item>
                                 </Col>
@@ -307,7 +309,7 @@ const AHSSumberForm = (props) => {
                 </Collapse>
 
                 {/* AHS Detail Form */}
-                {AHSkhusus == "false" && (
+                {AHSkhusus == false && (
                     <Collapse
                         key="2"
                         defaultActiveKey={["1"]}

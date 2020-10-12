@@ -16,6 +16,7 @@ import ProjectForm from "./Project-Form/ProjectForm";
 import RABProjectBagianForm from "./RAB-Project-Bagian-Form/RABProjectBagianForm";
 
 import WilayahForm from "./Wilayah-Form/WilayahForm";
+import WilayahTable from "./Wilayah-Table/WilayahTable";
 
 export {
     Sidebar,
@@ -32,4 +33,5 @@ export {
     ProjectForm,
     RABProjectBagianForm,
     WilayahForm,
+    WilayahTable,
 };

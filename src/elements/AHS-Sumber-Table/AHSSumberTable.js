@@ -71,17 +71,21 @@ const EditableCell = ({
     if (
         dataIndex == "noAHS" ||
         dataIndex == "satuan" ||
-        dataIndex == "koefisien" ||
+        // dataIndex == "koefisien" ||
         dataIndex == "sumber" ||
         dataIndex == "keterangan" ||
         dataIndex == "gambar"
     ) {
         required = false;
     }
-    const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+
+    var inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+    record &&
+        (inputNode =
+            record.isAHS && dataIndex == "koefisien" ? null : inputNode);
     return (
         <td {...restProps}>
-            {editing ? (
+            {editing && !(record.isAHS && dataIndex == "koefisien") ? (
                 <Form.Item
                     name={dataIndex}
                     style={{
@@ -346,7 +350,7 @@ const AHSSumberTable = () => {
         {
             title: " ",
             dataIndex: "gambar",
-            width: 30,
+            width: 80,
             editable: false,
             required: false,
             ellipsis: {
@@ -356,7 +360,7 @@ const AHSSumberTable = () => {
                 gambar !== undefined && (
                     <Tooltip placement="topLeft" title={<img src={gambar} />}>
                         {/* {"[]"} */}
-                        {record.name}
+                        {/* {record.name} */}
                     </Tooltip>
                 ),
         },

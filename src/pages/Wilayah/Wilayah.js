@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-    HSTable,
-    HSForm,
-    HSWilayahTahunSelector,
-    HSSort,
-} from "../../elements";
+
 import { SortBox } from "../../components";
 
 import { globalVariable } from "../../utils/global-variable";
@@ -25,13 +20,13 @@ import {
     List,
 } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-import { WilayahForm } from "../../elements";
+import { WilayahForm, WilayahTable } from "../../elements";
 
 const hostname = globalVariable("backendAddress");
 
 const Wilayah = () => {
     const [showWilayahForm, setShowWilayahForm] = useState(false);
-    const [wilayah, setWilayah] = useState([]);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         fetch(hostname + "/base/get-wilayah-full-data", {
@@ -46,6 +41,7 @@ const Wilayah = () => {
                 response.wilayah &&
                     (tableData = response.wilayah.map((item) => {
                         return {
+                            idWilayah: item.ID_WILAYAH,
                             wilayah: item.WILAYAH,
                             divreDaop: item.DIVRE_DAOP,
                             kecamatan: item.KECAMATAN,
@@ -56,7 +52,7 @@ const Wilayah = () => {
                 return tableData;
             })
             .then((tableData) => {
-                setWilayah(tableData);
+                setData(tableData);
             });
     }, []);
 
@@ -74,6 +70,14 @@ const Wilayah = () => {
                     <PlusOutlined /> New Wilayah Record
                 </Button>
             </div>
+
+            <WilayahTable
+                setData={(data) => {
+                    setData(data);
+                }}
+                data={data}
+            />
+
             <WilayahForm
                 showDrawer={() => {
                     setShowWilayahForm(true);

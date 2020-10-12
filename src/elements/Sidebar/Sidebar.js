@@ -62,7 +62,7 @@ const Sidebar = (props) => {
                     >
                         <Menu.Item
                             key="/ahs-sumber"
-                            icon={<PieChartOutlined />}
+                            // icon={<PieChartOutlined />}
                         >
                             <Link to="/ahs-sumber">AHS Sumber</Link>
                         </Menu.Item>

@@ -190,7 +190,7 @@ const HSForm = (props) => {
                                     },
                                 ]}
                             >
-                                <InputNumber
+                                <Input
                                     style={{ width: "100%" }}
                                     placeholder="Bil. bulat"
                                     value={satuan}
