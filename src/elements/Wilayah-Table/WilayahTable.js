@@ -22,7 +22,7 @@ const EditableCell = ({
     ...restProps
 }) => {
     var required = true;
-    if (dataIndex == "wilayah") {
+    if (dataIndex !== "wilayah") {
         required = false;
     }
     const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
