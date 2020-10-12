@@ -37,9 +37,11 @@ const Wilayah = () => {
         })
             .then((response) => response.json())
             .then((response) => {
+                var j = -1;
                 var tableData = [];
                 response.wilayah &&
                     (tableData = response.wilayah.map((item) => {
+                        j++;
                         return {
                             idWilayah: item.ID_WILAYAH,
                             wilayah: item.WILAYAH,
@@ -47,6 +49,7 @@ const Wilayah = () => {
                             kecamatan: item.KECAMATAN,
                             kabupatenKotamadya: item.KABUPATEN_KOTAMADYA,
                             provinsi: item.PROVINSI,
+                            key: j.toString(),
                         };
                     }));
                 return tableData;
