@@ -428,7 +428,7 @@ const AHSProjectTable = () => {
                                 satuan: ahsd.P_SATUAN_URAIAN,
                                 koefisien: ahsd.P_KOEFISIEN_URAIAN,
                                 keterangan: ahsd.P_KETERANGAN_URAIAN,
-                                HS: ahsd.HS.HARGA,
+                                HS: ahsd.hs ? ahsd.HS.HARGA : 0,
                             };
                         }),
                     };

@@ -29,6 +29,7 @@ const Wilayah = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+        console.log("atau disiini");
         fetch(hostname + "/base/get-wilayah-full-data", {
             headers: {
                 "Content-Type": "application/json",
@@ -37,7 +38,7 @@ const Wilayah = () => {
         })
             .then((response) => response.json())
             .then((response) => {
-                var j = -1;
+                var j = 0;
                 var tableData = [];
                 response.wilayah &&
                     (tableData = response.wilayah.map((item) => {
@@ -49,7 +50,7 @@ const Wilayah = () => {
                             kecamatan: item.KECAMATAN,
                             kabupatenKotamadya: item.KABUPATEN_KOTAMADYA,
                             provinsi: item.PROVINSI,
-                            key: j.toString(),
+                            key: j.toString() - 1,
                         };
                     }));
                 return tableData;

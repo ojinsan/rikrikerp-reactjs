@@ -1,15 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    useReducer,
+} from "react";
 
 import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
 import { globalVariable } from "../../utils/global-variable";
 
 const hostname = globalVariable("backendAddress");
 
-// "WILAYAH":"Tubagus Ismail",
-//     "DIVRE_DAOP":"Cimahi",
-//     "KECAMATAN":"Cimindi",
-//     "KABUPATEN_KOTAMADYA":"Bandung",
-//     "PROVINSI":"Jawa Barat"
+// MARK: Initial Setup Function
+function dataReducer(state, action) {
+    switch (action.type) {
+        case "ACTION_SELECTED": {
+            return {
+                ...state,
+                selectedOption: action.payload.option,
+                selectedIndex: action.payload.index,
+                newData: action.payload.newData,
+            };
+        }
+        case "DELETE": {
+            return {
+                ...state,
+                loading: true,
+            };
+        }
+        case "DELETE_SUCCESS": {
+            console.log("dispatch delete success");
+            console.log(action.payload);
+            return {
+                ...state,
+                loading: false,
+                data: action.payload,
+                selectedOption: "",
+            };
+        }
+        case "FETCH_DATA": {
+            return {
+                ...state,
+                loading: true,
+                data: null,
+            };
+        }
+        case "FETCH_DATA_SUCCESS": {
+            console.log("dispatch fetch success");
+            console.log(action.payload);
+            return {
+                ...state,
+                loading: false,
+                data: action.payload,
+            };
+        }
+        case "RESET": {
+            return { loading: false, selectedOption: "", data: null };
+        }
+        default:
+            throw new Error(`Not supported action ${action.type}`);
+    }
+}
 
 const EditableCell = ({
     editing,
@@ -50,105 +101,20 @@ const EditableCell = ({
     );
 };
 
-const WilayahTable = (props) => {
-    const [form] = Form.useForm();
+// ======================= MARK: Component =======================
+const WilayahTable = () => {
     const [editingKey, setEditingKey] = useState("");
     const isEditing = (record) => record.key === editingKey;
+    const [form] = Form.useForm();
+    const [wilayahs, dispatch] = useReducer(dataReducer, {
+        loading: false,
+        selectedOption: "FETCH",
+        data: null,
+        selectedIndex: -1,
+        newData: {},
+    });
 
-    const edit = (record) => {
-        form.setFieldsValue({
-            wilayah: "",
-            divreDaop: "",
-            kecamatan: "",
-            kabupatenKotamadya: "",
-            provinsi: "",
-            ...record,
-        });
-        setEditingKey(record.key);
-    };
-
-    const cancel = () => {
-        setEditingKey("");
-    };
-
-    const save = async (key, controller) => {
-        try {
-            const row = await form.validateFields();
-            const newData = [...props.data];
-            const index = newData.findIndex((item) => key === item.key);
-
-            const editedContent = {
-                ID_WILAYAH: row.idWilayah,
-                WILAYAH: row.wilayah,
-                DIVRE_DAOP: row.divreDaop,
-                KECAMATAN: row.kecamatan,
-                KABUPATEN_KOTAMADYA: row.kabupatenKotamadya,
-                PROVINSI: row.provinsi,
-            };
-
-            console.log(editedContent);
-
-            if (index > -1) {
-                fetch(hostname + "/base/update-wilayah", {
-                    signal: controller.signal,
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(editedContent),
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            const item = newData[index];
-                            newData.splice(index, 1, { ...item, ...row });
-                            props.setData(newData);
-                        }
-                    })
-                    .catch((error) => console.log(error));
-
-                setEditingKey("");
-            } else {
-                console.log("Index not found, failed to edit");
-                setEditingKey("");
-            }
-        } catch (errInfo) {
-            console.log("Validate Failed:", errInfo);
-        }
-    };
-
-    const handleDelete = (key, controller) => {
-        console.log(key);
-        // try {
-        const newData = [...props.data];
-        //const keysTemp = key.split("-");
-        console.log("utama delete");
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-            console.log("ketemu");
-            fetch(hostname + "/base/delete-wilayah", {
-                signal: controller.signal,
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    ID_WILAYAH: newData[index].idWilayah,
-                }),
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        newData.splice(index, 1);
-                        props.setData(newData);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } else {
-            console.log("situ");
-        }
-    };
-
+    // MARK: Column Set Up
     const columns = [
         {
             title: "ID Wil",
@@ -195,9 +161,9 @@ const WilayahTable = (props) => {
                     <span>
                         <a
                             onClick={() => {
-                                const controller = new AbortController();
-                                save(record.key, controller);
-                                return () => controller.abort();
+                                // const controller = new AbortController();
+                                // save(record.key, controller);
+                                // return () => controller.abort();
                             }}
                             style={{
                                 marginRight: 8,
@@ -217,16 +183,24 @@ const WilayahTable = (props) => {
                         >
                             Edit
                         </a>
-                        <Popconfirm
-                            title="Sure to delete?"
-                            onConfirm={() => {
-                                const controller = new AbortController();
-                                handleDelete(record.key, controller);
-                                return () => controller.abort();
-                            }}
-                        >
-                            <a> Delete </a>
-                        </Popconfirm>
+                        {isMountedRef.current && (
+                            <Popconfirm
+                                title="Sure to delete?"
+                                onConfirm={() => {
+                                    handleDelete(record.key);
+                                }}
+                            >
+                                <a
+                                // onClick={() => {
+                                //     const controller = new AbortController();
+                                //     handleDelete(record.key, controller);
+                                //     return () => controller.abort();
+                                // }}
+                                >
+                                    Delete
+                                </a>
+                            </Popconfirm>
+                        )}
                     </div>
                 );
             },
@@ -250,6 +224,128 @@ const WilayahTable = (props) => {
         };
     });
 
+    // MARK: State Manager
+    const isMountedRef = useRef(null);
+    useEffect(() => {
+        //let mounted = true;
+        isMountedRef.current = true;
+        console.log(
+            "Info: wilayah(dot)selectedOption is changed to " +
+                wilayahs.selectedOption
+        );
+        if (wilayahs.selectedOption === "FETCH") {
+            // dispatch({ type: "FETCH_DATA" });
+            fetch(hostname + "/base/get-wilayah-full-data", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    var j = 0;
+                    var tableData = [];
+                    response.wilayah &&
+                        (tableData = response.wilayah.map((item) => {
+                            j++;
+                            return {
+                                idWilayah: item.ID_WILAYAH,
+                                wilayah: item.WILAYAH,
+                                divreDaop: item.DIVRE_DAOP,
+                                kecamatan: item.KECAMATAN,
+                                kabupatenKotamadya: item.KABUPATEN_KOTAMADYA,
+                                provinsi: item.PROVINSI,
+                                key: j.toString() - 1,
+                            };
+                        }));
+                    return tableData;
+                })
+                .then((data) => {
+                    console.log("Fetch Success!");
+                    if (isMountedRef.current) {
+                        dispatch({
+                            type: "FETCH_DATA_SUCCESS",
+                            payload: data,
+                        });
+                    }
+                });
+        } else if (wilayahs.selectedOption == "DELETE") {
+            console.log("delete the index " + wilayahs.selectedIndex);
+            // dispatch({ type: "DELETE" });
+            if (wilayahs.selectedIndex > -1) {
+                console.log("ketemu");
+                fetch(hostname + "/base/delete-wilayah", {
+                    //signal: controller.signal,
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ID_WILAYAH:
+                            wilayahs.data[wilayahs.selectedIndex].idWilayah,
+                    }),
+                }).then((response) => {
+                    if (response.ok) {
+                        console.log("Success from back end");
+                        const newData = JSON.parse(
+                            JSON.stringify(wilayahs.data)
+                        );
+                        newData.splice(wilayahs.selectedIndex, 1);
+                        console.log(newData);
+
+                        if (isMountedRef.current) {
+                            dispatch({
+                                type: "DELETE_SUCCESS",
+                                payload: newData,
+                            });
+                        }
+                    }
+                });
+            } else {
+                console.log("situ");
+            }
+        } else {
+            //dispatch({ type: "RESET" });
+        }
+        return () => (isMountedRef.current = false);
+    }, [wilayahs.selectedOption]);
+
+    // MARK: Handlers
+    const edit = (record) => {
+        form.setFieldsValue({
+            wilayah: "",
+            divreDaop: "",
+            kecamatan: "",
+            kabupatenKotamadya: "",
+            provinsi: "",
+            ...record,
+        });
+        setEditingKey(record.key);
+    };
+
+    const cancel = () => {
+        setEditingKey("");
+    };
+
+    const save = () => {};
+
+    const handleDelete = (key) => {
+        const newData = JSON.parse(JSON.stringify(wilayahs.data));
+        const index = newData.findIndex((item) => key === item.key);
+        console.log(
+            "try deleting record with key: " + key + " at index: " + index
+        );
+        dispatch({
+            type: "ACTION_SELECTED",
+            payload: {
+                option: "DELETE",
+                index: index,
+                newData: {},
+            },
+        });
+    };
+
+    // MARK: Render the object
     return (
         <Form form={form} component={false}>
             <Table
@@ -259,7 +355,7 @@ const WilayahTable = (props) => {
                     },
                 }}
                 bordered
-                dataSource={props.data}
+                dataSource={wilayahs.data}
                 columns={mergedColumns}
                 rowClassName="editable-row"
                 pagination={{

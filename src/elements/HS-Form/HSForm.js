@@ -194,7 +194,7 @@ const HSForm = (props) => {
                                     style={{ width: "100%" }}
                                     placeholder="Bil. bulat"
                                     value={satuan}
-                                    onChange={(e) => setSatuan(e)}
+                                    onChange={(e) => setSatuan(e.target.value)}
                                 />
                             </Form.Item>
                         </Col>

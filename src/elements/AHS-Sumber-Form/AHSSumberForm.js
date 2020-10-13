@@ -253,7 +253,9 @@ const AHSSumberForm = (props) => {
                                             style={{ width: "100%" }}
                                             placeholder="Nomor"
                                             value={nomorAHS}
-                                            onChange={(e) => setNomorAHS(e)}
+                                            onChange={(e) =>
+                                                setNomorAHS(e.target.value)
+                                            }
                                         />
                                     </Form.Item>
                                 </Col>
