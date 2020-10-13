@@ -77,8 +77,17 @@ const WilayahForm = (props) => {
                     if (response.ok) {
                         const responseBody = await response.json();
                         console.log(responseBody);
+                        props.dispatch({
+                            type: "ACTION_SELECTED",
+                            payload: {
+                                option: "FETCH",
+                                index: -1,
+                                newData: {},
+                                row: {},
+                            },
+                        });
                         resetForm();
-                        props.onClose();
+                        // props.onClose();
                     }
                 } catch (err) {
                     alert(err.message);
