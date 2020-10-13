@@ -55,14 +55,9 @@ const WilayahTable = (props) => {
     const [editingKey, setEditingKey] = useState("");
     const isEditing = (record) => record.key === editingKey;
     const [form] = Form.useForm();
-    // const [wilayahs, dispatch] = useReducer(dataReducer, {
-    //     loading: false,
-    //     selectedOption: "FETCH",
-    //     data: null,
-    //     selectedIndex: -1,
-    //     newData: {},
-    //     row: {},
-    // });
+
+    const [sortedInfo, setSortedInfo] = useState(null);
+    const [filteredInfo, setFilteredInfo] = useState(null);
 
     // MARK: Column Set Up
     const columns = [
@@ -77,28 +72,34 @@ const WilayahTable = (props) => {
             dataIndex: "wilayah",
             width: "30%",
             editable: true,
+            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
+            //sortOrder: "descend",
         },
         {
             title: "Divre / Daop",
             dataIndex: "divreDaop",
             width: "30%",
             editable: true,
+            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
         },
         {
             title: "Kabupaten / Kotamadya",
             dataIndex: "kabupatenKotamadya",
             width: "40%",
             editable: true,
+            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
         },
         {
             title: "provinsi",
             dataIndex: "provinsi",
             width: "40%",
             editable: true,
+            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
         },
         {
             title: "operation",
             dataIndex: "operation",
+
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -120,8 +121,9 @@ const WilayahTable = (props) => {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <div>
+                    <div className="d-flex flex-row justify-content-between align-items-center">
                         <a
+                            className="m-1"
                             disabled={editingKey !== ""}
                             onClick={() => edit(record)}
                         >
@@ -134,7 +136,7 @@ const WilayahTable = (props) => {
                                 handleDelete(record.key);
                             }}
                         >
-                            <a> Delete</a>
+                            <a className="m-1">Delete</a>
                         </Popconfirm>
                         {/* )} */}
                     </div>
@@ -159,128 +161,6 @@ const WilayahTable = (props) => {
             }),
         };
     });
-
-    // MARK: State Manager
-    // const isMountedRef = useRef(null);
-    // useEffect(() => {
-    //     //let mounted = true;
-    //     isMountedRef.current = true;
-    //     console.log(
-    //         "Info: wilayah(dot)selectedOption is changed to " +
-    //             wilayahs.selectedOption
-    //     );
-    //     if (wilayahs.selectedOption === "FETCH") {
-    //         // dispatch({ type: "FETCH_DATA" });
-    //         fetch(hostname + "/base/get-wilayah-full-data", {
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Accept: "application/json",
-    //             },
-    //         })
-    //             .then((response) => response.json())
-    //             .then((response) => {
-    //                 var j = 0;
-    //                 var tableData = [];
-    //                 response.wilayah &&
-    //                     (tableData = response.wilayah.map((item) => {
-    //                         j++;
-    //                         return {
-    //                             idWilayah: item.ID_WILAYAH,
-    //                             wilayah: item.WILAYAH,
-    //                             divreDaop: item.DIVRE_DAOP,
-    //                             kecamatan: item.KECAMATAN,
-    //                             kabupatenKotamadya: item.KABUPATEN_KOTAMADYA,
-    //                             provinsi: item.PROVINSI,
-    //                             key: j.toString() - 1,
-    //                         };
-    //                     }));
-    //                 return tableData;
-    //             })
-    //             .then((data) => {
-    //                 console.log("Fetch Success!");
-    //                 if (isMountedRef.current) {
-    //                     dispatch({
-    //                         type: "FETCH_DATA_SUCCESS",
-    //                         payload: data,
-    //                     });
-    //                 }
-    //             });
-    //     } else if (wilayahs.selectedOption == "DELETE") {
-    //         console.log("delete the index " + wilayahs.selectedIndex);
-    //         // dispatch({ type: "DELETE" });
-    //         if (wilayahs.selectedIndex > -1) {
-    //             console.log("ketemu");
-    //             fetch(hostname + "/base/delete-wilayah", {
-    //                 //signal: controller.signal,
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify({
-    //                     ID_WILAYAH:
-    //                         wilayahs.data[wilayahs.selectedIndex].idWilayah,
-    //                 }),
-    //             }).then((response) => {
-    //                 if (response.ok) {
-    //                     console.log("Success from back end");
-    //                     const newData = JSON.parse(
-    //                         JSON.stringify(wilayahs.data)
-    //                     );
-    //                     newData.splice(wilayahs.selectedIndex, 1);
-    //                     console.log(newData);
-
-    //                     if (isMountedRef.current) {
-    //                         dispatch({
-    //                             type: "DELETE_SUCCESS",
-    //                             payload: newData,
-    //                         });
-    //                     }
-    //                 }
-    //             });
-    //         } else {
-    //             console.log("situ");
-    //         }
-    //     } else if (wilayahs.selectedOption == "UPDATE") {
-    //         console.log(wilayahs.selectedIndex);
-    //         if (wilayahs.selectedIndex > -1) {
-    //             fetch(hostname + "/base/update-wilayah", {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(wilayahs.newData),
-    //             })
-    //                 .then((response) => {
-    //                     if (response.ok) {
-    //                         var newDatas = JSON.parse(
-    //                             JSON.stringify(wilayahs.data)
-    //                         );
-    //                         const item = newDatas[wilayahs.selectedIndex];
-
-    //                         newDatas.splice(wilayahs.selectedIndex, 1, {
-    //                             ...item,
-    //                             ...wilayahs.row,
-    //                         });
-    //                         console.log(newDatas);
-    //                         dispatch({
-    //                             type: "UPDATE_SUCCESS",
-    //                             payload: newDatas,
-    //                         });
-    //                     }
-    //                 })
-    //                 .catch((error) => console.log(error));
-    //             setEditingKey("");
-    //         } else {
-    //             console.log("Index not found, failed to edit");
-    //             setEditingKey("");
-    //         }
-    //     } else {
-    //         //dispatch({ type: "RESET" });
-    //     }
-    //     return () => (isMountedRef.current = false);
-    // }, [wilayahs.selectedOption]);
-
-    // MARK: Handlers
 
     const edit = (record) => {
         form.setFieldsValue({
@@ -366,6 +246,7 @@ const WilayahTable = (props) => {
                 pagination={{
                     onChange: cancel,
                 }}
+                size="small"
             />
         </Form>
     );
