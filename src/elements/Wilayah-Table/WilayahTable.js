@@ -6,8 +6,19 @@ import React, {
     useReducer,
 } from "react";
 
-import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
+import {
+    Table,
+    Input,
+    InputNumber,
+    Popconfirm,
+    Form,
+    Space,
+    Button,
+} from "antd";
 // import { globalVariable } from "../../utils/global-variable";
+import Highlighter from "react-highlight-words";
+
+import { SearchOutlined } from "@ant-design/icons";
 
 // const hostname = globalVariable("backendAddress");
 
@@ -58,8 +69,85 @@ const WilayahTable = (props) => {
 
     const [sortedInfo, setSortedInfo] = useState(null);
     const [filteredInfo, setFilteredInfo] = useState(null);
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    var searchInput = "";
 
     // MARK: Column Set Up
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({
+            setSelectedKeys,
+            selectedKeys,
+            confirm,
+            clearFilters,
+        }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={(node) => {
+                        searchInput = node;
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) =>
+                        setSelectedKeys(e.target.value ? [e.target.value] : [])
+                    }
+                    onPressEnter={() =>
+                        handleSearch(selectedKeys, confirm, dataIndex)
+                    }
+                    style={{ width: 188, marginBottom: 8, display: "block" }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            handleSearch(selectedKeys, confirm, dataIndex)
+                        }
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{ color: filtered ? "#1890ff" : undefined }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                ? record[dataIndex]
+                      .toString()
+                      .toLowerCase()
+                      .includes(value.toLowerCase())
+                : "",
+        onFilterDropdownVisibleChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ""}
+                />
+            ) : (
+                text
+            ),
+    });
+
     const columns = [
         {
             title: "ID Wil",
@@ -72,7 +160,10 @@ const WilayahTable = (props) => {
             dataIndex: "wilayah",
             width: "30%",
             editable: true,
-            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
+            sorter: {
+                compare: (a, b) => a.wilayah.localeCompare(b.wilayah),
+            },
+            ...getColumnSearchProps("wilayah"),
             //sortOrder: "descend",
         },
         {
@@ -80,21 +171,31 @@ const WilayahTable = (props) => {
             dataIndex: "divreDaop",
             width: "30%",
             editable: true,
-            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
+            sorter: {
+                compare: (a, b) => a.divreDaop.localeCompare(b.divreDaop),
+            },
+            ...getColumnSearchProps("divreDaop"),
         },
         {
             title: "Kabupaten / Kotamadya",
             dataIndex: "kabupatenKotamadya",
             width: "40%",
             editable: true,
-            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
+            sorter: {
+                compare: (a, b) =>
+                    a.kabupatenKotamadya.localeCompare(b.kabupatenKotamadya),
+            },
+            ...getColumnSearchProps("kabupatenKotamadya"),
         },
         {
             title: "provinsi",
             dataIndex: "provinsi",
             width: "40%",
             editable: true,
-            sorter: (a, b) => a.wilayah.length - b.wilayah.length,
+            sorter: {
+                compare: (a, b) => a.provinsi.localeCompare(b.provinsi),
+            },
+            ...getColumnSearchProps("provinsi"),
         },
         {
             title: "operation",
@@ -161,6 +262,18 @@ const WilayahTable = (props) => {
             }),
         };
     });
+
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText("");
+    };
 
     const edit = (record) => {
         form.setFieldsValue({
