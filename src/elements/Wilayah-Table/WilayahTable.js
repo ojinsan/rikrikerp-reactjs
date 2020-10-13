@@ -11,74 +11,6 @@ import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
 
 // const hostname = globalVariable("backendAddress");
 
-// MARK: Initial Setup Function
-function dataReducer(state, action) {
-    switch (action.type) {
-        case "ACTION_SELECTED": {
-            return {
-                ...state,
-                selectedOption: action.payload.option,
-                selectedIndex: action.payload.index,
-                newData: action.payload.newData,
-                row: action.payload.row,
-            };
-        }
-        case "DELETE": {
-            return {
-                ...state,
-                loading: true,
-            };
-        }
-        case "DELETE_SUCCESS": {
-            console.log("dispatch delete success");
-            console.log(action.payload);
-            return {
-                ...state,
-                loading: false,
-                data: action.payload,
-                selectedOption: "",
-            };
-        }
-        case "UPDATE": {
-            return {
-                ...state,
-                loading: true,
-            };
-        }
-        case "UPDATE_SUCCESS": {
-            console.log("dispatch update success");
-            console.log(action.payload);
-            return {
-                ...state,
-                loading: false,
-                data: action.payload,
-                selectedOption: "",
-            };
-        }
-        case "FETCH_DATA": {
-            return {
-                ...state,
-                loading: true,
-                data: null,
-            };
-        }
-        case "FETCH_DATA_SUCCESS": {
-            console.log("dispatch fetch success");
-            console.log(action.payload);
-            return {
-                ...state,
-                loading: false,
-                data: action.payload,
-            };
-        }
-        case "RESET": {
-            return { loading: false, selectedOption: "", data: null };
-        }
-        default:
-            throw new Error(`Not supported action ${action.type}`);
-    }
-}
-
 const EditableCell = ({
     editing,
     dataIndex,
@@ -150,12 +82,6 @@ const WilayahTable = (props) => {
             title: "Divre / Daop",
             dataIndex: "divreDaop",
             width: "30%",
-            editable: true,
-        },
-        {
-            title: "Kecamatan",
-            dataIndex: "kecamatan",
-            width: "40%",
             editable: true,
         },
         {
