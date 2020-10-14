@@ -1,13 +1,7 @@
-import React, {
-    useState,
-    useEffect,
-    useRef,
-    useCallback,
-    useReducer,
-} from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 
 // IMPORT: Material Kit from ant-design
-import { Table, Input, InputNumber, Popconfirm, Form, Button } from "antd";
+import { Input, InputNumber, Form, Button } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { WilayahForm, WilayahTable } from "../../elements";
 
@@ -84,51 +78,9 @@ function dataReducer(state, action) {
     }
 }
 
-const EditableCell = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-}) => {
-    var required = true;
-    if (dataIndex !== "wilayah") {
-        required = false;
-    }
-    const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-    return (
-        <td {...restProps}>
-            {editing ? (
-                <Form.Item
-                    name={dataIndex}
-                    style={{
-                        margin: 0,
-                    }}
-                    rules={[
-                        {
-                            required: required,
-                            message: `Please Input ${title}!`,
-                        },
-                    ]}
-                >
-                    {inputNode}
-                </Form.Item>
-            ) : (
-                children
-            )}
-        </td>
-    );
-};
-
 // ======================= MARK: Component =======================
 const Wilayah = () => {
     const [showWilayahForm, setShowWilayahForm] = useState(false);
-    //const [editingKey, setEditingKey] = useState("");
-    //const isEditing = (record) => record.key === editingKey;
-    //const [form] = Form.useForm();
     const [wilayahs, dispatch] = useReducer(dataReducer, {
         loading: false,
         selectedOption: "FETCH",

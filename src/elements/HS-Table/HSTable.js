@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
-import { globalVariable } from "../../utils/global-variable";
-
-const hostname = globalVariable("backendAddress");
+import {
+    Table,
+    Input,
+    InputNumber,
+    Popconfirm,
+    Form,
+    Space,
+    Button,
+} from "antd";
+import Highlighter from "react-highlight-words";
+import { SearchOutlined } from "@ant-design/icons";
 
 const EditableCell = ({
     editing,
@@ -50,116 +57,92 @@ const EditableCell = ({
 };
 
 const HSTable = (props) => {
-    const [form] = Form.useForm();
-    //const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState("");
-
     const isEditing = (record) => record.key === editingKey;
+    const [form] = Form.useForm();
 
-    const edit = (record) => {
-        form.setFieldsValue({
-            idHS: "",
-            uraian: "",
-            satuan: "",
-            harga: "",
-            kelompok: "",
-            sumberHarga: "",
-            keterangan: "",
-            screenshot: "",
-            ...record,
-        });
-        setEditingKey(record.key);
-    };
+    const [sortedInfo, setSortedInfo] = useState(null);
+    const [filteredInfo, setFilteredInfo] = useState(null);
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    var searchInput = "";
 
-    const cancel = () => {
-        setEditingKey("");
-    };
-
-    const save = async (key, controller) => {
-        try {
-            const row = await form.validateFields();
-            const newData = [...props.data];
-            const index = newData.findIndex((item) => key === item.key);
-
-            const editedContent = {
-                ID_HS: row.idHS,
-                URAIAN: row.uraian,
-                SATUAN: row.satuan,
-                HARGA: row.harga,
-                TYPE: row.kelompok,
-                //ID_WILAYAH: "1",
-                TAHUN: props.tahun,
-                SUMBER_HARGA: row.sumberHarga,
-                KETERANGAN: row.keterangan,
-                SCREENSHOT_HS: row.screenshot,
-            };
-
-            console.log(editedContent);
-
-            if (index > -1) {
-                fetch(hostname + "/data-source/update-hs", {
-                    signal: controller.signal,
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(editedContent),
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            const item = newData[index];
-                            newData.splice(index, 1, { ...item, ...row });
-                            props.setData(newData);
-                        }
-                    })
-                    .catch((error) => console.log(error));
-
-                setEditingKey("");
-            } else {
-                console.log("Index not found, failed to edit");
-                //newData.push(row);
-                //setData(newData);
-                setEditingKey("");
-            }
-        } catch (errInfo) {
-            console.log("Validate Failed:", errInfo);
-        }
-    };
-
-    const handleDelete = (key, controller) => {
-        console.log(key);
-        // try {
-        const newData = [...props.data];
-        const keysTemp = key.split("-");
-        console.log("utama delete");
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-            console.log("ketemu");
-            fetch(hostname + "/data-source/delete-hs", {
-                signal: controller.signal,
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    TAHUN: props.tahun,
-                    ID_HS: newData[index].idHS,
-                }),
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        newData.splice(index, 1);
-                        props.setData(newData);
+    // MARK: Filter Set Up
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({
+            setSelectedKeys,
+            selectedKeys,
+            confirm,
+            clearFilters,
+        }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={(node) => {
+                        searchInput = node;
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) =>
+                        setSelectedKeys(e.target.value ? [e.target.value] : [])
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } else {
-            console.log("situ");
-        }
-    };
+                    onPressEnter={() =>
+                        handleSearch(selectedKeys, confirm, dataIndex)
+                    }
+                    style={{ width: 188, marginBottom: 8, display: "block" }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            handleSearch(selectedKeys, confirm, dataIndex)
+                        }
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{ color: filtered ? "#1890ff" : undefined }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                ? record[dataIndex]
+                      .toString()
+                      .toLowerCase()
+                      .includes(value.toLowerCase())
+                : "",
+        onFilterDropdownVisibleChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ""}
+                />
+            ) : (
+                text
+            ),
+    });
 
+    // MARK: Column Set Up
     const columns = [
         {
             title: "ID HS",
@@ -273,9 +256,145 @@ const HSTable = (props) => {
         };
     });
 
+    // MARK: Default Action Setup
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText("");
+    };
+
+    const edit = (record) => {
+        form.setFieldsValue({
+            idHS: "",
+            uraian: "",
+            satuan: "",
+            harga: "",
+            kelompok: "",
+            sumberHarga: "",
+            keterangan: "",
+            screenshot: "",
+            ...record,
+        });
+        setEditingKey(record.key);
+    };
+
+    const cancel = () => {
+        setEditingKey("");
+    };
+
+    // MARK: Enhanced Action Setup
+    const save = async (key) => {
+        try {
+            var row = await form.validateFields();
+            const newData = [...props.HSs.data];
+            row = { ...row, key: key };
+
+            const index = newData.findIndex((item) => key === item.key);
+
+            const editedContent = {
+                ID_HS: row.idHS,
+                URAIAN: row.uraian,
+                SATUAN: row.satuan,
+                HARGA: row.harga,
+                TYPE: row.kelompok,
+                //ID_WILAYAH: "1",
+                TAHUN: props.tahun,
+                SUMBER_HARGA: row.sumberHarga,
+                KETERANGAN: row.keterangan,
+                SCREENSHOT_HS: row.screenshot,
+            };
+
+            props.dispatch({
+                type: "ACTION_SELECTED",
+                payload: {
+                    option: "UPDATE",
+                    index: index,
+                    newData: editedContent,
+                    row: { ...row, key: key },
+                },
+            });
+            setEditingKey("");
+            // if (index > -1) {
+            //     fetch(hostname + "/data-source/update-hs", {
+            //         signal: controller.signal,
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         },
+            //         body: JSON.stringify(editedContent),
+            //     })
+            //         .then((response) => {
+            //             if (response.ok) {
+            //                 const item = newData[index];
+            //                 newData.splice(index, 1, { ...item, ...row });
+            //                 props.setData(newData);
+            //             }
+            //         })
+            //         .catch((error) => console.log(error));
+
+            //     setEditingKey("");
+            // } else {
+            //     console.log("Index not found, failed to edit");
+            //     //newData.push(row);
+            //     //setData(newData);
+            //     setEditingKey("");
+            // }
+        } catch (errInfo) {
+            setEditingKey("");
+            console.log("Validate Failed:", errInfo);
+        }
+    };
+
+    const handleDelete = (key, controller) => {
+        const newData = JSON.parse(JSON.stringify(props.HSs.data));
+        const index = newData.findIndex((item) => key === item.key);
+        console.log(
+            "try deleting record with key: " + key + " at index: " + index
+        );
+        props.dispatch({
+            type: "ACTION_SELECTED",
+            payload: {
+                option: "DELETE",
+                index: index,
+                newData: {},
+            },
+        });
+        // if (index > -1) {
+        //     console.log("ketemu");
+        //     fetch(hostname + "/data-source/delete-hs", {
+        //         signal: controller.signal,
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({
+        //             TAHUN: props.tahun,
+        //             ID_HS: newData[index].idHS,
+        //         }),
+        //     })
+        //         .then((response) => {
+        //             if (response.ok) {
+        //                 newData.splice(index, 1);
+        //                 props.setData(newData);
+        //             }
+        //         })
+        //         .catch((err) => {
+        //             console.log(err);
+        //         });
+        // } else {
+        //     console.log("situ");
+        // }
+    };
+
     console.log(props.tahun, props.wilayahProject);
 
-    useEffect(() => {}, [props.tahun, props.wilayahProject, props.data]);
+    // useEffect(() => {}, [props.tahun, props.wilayahProject, props.data]);
 
     return (
         <Form form={form} component={false}>
@@ -286,12 +405,13 @@ const HSTable = (props) => {
                     },
                 }}
                 bordered
-                dataSource={props.data}
+                dataSource={props.HSs.data}
                 columns={mergedColumns}
                 rowClassName="editable-row"
                 pagination={{
                     onChange: cancel,
                 }}
+                size="small"
             />
         </Form>
     );

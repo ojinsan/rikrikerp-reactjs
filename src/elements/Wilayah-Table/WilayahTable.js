@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-    useRef,
-    useCallback,
-    useReducer,
-} from "react";
+import React, { useState } from "react";
 
 import {
     Table,
@@ -15,12 +9,8 @@ import {
     Space,
     Button,
 } from "antd";
-// import { globalVariable } from "../../utils/global-variable";
 import Highlighter from "react-highlight-words";
-
 import { SearchOutlined } from "@ant-design/icons";
-
-// const hostname = globalVariable("backendAddress");
 
 const EditableCell = ({
     editing,
@@ -73,7 +63,7 @@ const WilayahTable = (props) => {
     const [searchedColumn, setSearchedColumn] = useState("");
     var searchInput = "";
 
-    // MARK: Column Set Up
+    // MARK: Filter Set Up
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
             setSelectedKeys,
@@ -148,6 +138,7 @@ const WilayahTable = (props) => {
             ),
     });
 
+    // MARK: Column Set Up
     const columns = [
         {
             title: "ID Wil",
@@ -263,6 +254,7 @@ const WilayahTable = (props) => {
         };
     });
 
+    // MARK: Default Action Setup
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
 
@@ -291,15 +283,12 @@ const WilayahTable = (props) => {
         setEditingKey("");
     };
 
+    // MARK: Enhanced Action Setup
     const save = async (key) => {
         try {
             var row = await form.validateFields();
             const newData = [...props.wilayahs.data];
-            row = {
-                ...row,
-                key: key,
-            };
-            console.log(row);
+            row = { ...row, key: key };
 
             const index = newData.findIndex((item) => key === item.key);
 

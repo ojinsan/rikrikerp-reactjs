@@ -93,7 +93,16 @@ const HSForm = (props) => {
                         const responseBody = await response.json();
                         console.log(responseBody);
                         resetForm();
-                        props.onClose();
+                        props.dispatch({
+                            type: "ACTION_SELECTED",
+                            payload: {
+                                option: "FETCH",
+                                index: -1,
+                                newData: {},
+                                row: {},
+                            },
+                        });
+                        //props.onClose();
                     }
                 } catch (err) {
                     alert(err.message);
