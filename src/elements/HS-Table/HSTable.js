@@ -155,36 +155,60 @@ const HSTable = (props) => {
             dataIndex: "uraian",
             width: "15%",
             editable: true,
+            sorter: {
+                compare: (a, b) => a.uraian.localeCompare(b.uraian),
+            },
+            ...getColumnSearchProps("uraian"),
         },
         {
             title: "satuan",
             dataIndex: "satuan",
             width: "40%",
             editable: true,
+            sorter: {
+                compare: (a, b) => a.satuan.localeCompare(b.satuan),
+            },
+            ...getColumnSearchProps("satuan"),
         },
         {
             title: "harga",
             dataIndex: "harga",
             width: "40%",
             editable: true,
+            sorter: {
+                compare: (a, b) => a.harga - b.harga,
+            },
+            ...getColumnSearchProps("harga"),
         },
         {
             title: "kelompok",
             dataIndex: "kelompok",
             width: "40%",
             editable: true,
+            sorter: {
+                compare: (a, b) => a.kelompok.localeCompare(b.kelompok),
+            },
+            ...getColumnSearchProps("kelompok"),
         },
         {
             title: "sumber harga",
             dataIndex: "sumberHarga",
             width: "40%",
             editable: true,
+            sorter: {
+                compare: (a, b) => a.sumberHarga.localeCompare(b.sumberHarga),
+            },
+            ...getColumnSearchProps("sumberHarga"),
         },
         {
             title: "keterangan",
             dataIndex: "keterangan",
             width: "40%",
             editable: true,
+            sorter: {
+                compare: (a, b) => a.keterangan.localeCompare(b.keterangan),
+            },
+            ...getColumnSearchProps("keterangan"),
         },
         {
             title: "screenshot",
@@ -320,31 +344,6 @@ const HSTable = (props) => {
                 },
             });
             setEditingKey("");
-            // if (index > -1) {
-            //     fetch(hostname + "/data-source/update-hs", {
-            //         signal: controller.signal,
-            //         method: "POST",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //         },
-            //         body: JSON.stringify(editedContent),
-            //     })
-            //         .then((response) => {
-            //             if (response.ok) {
-            //                 const item = newData[index];
-            //                 newData.splice(index, 1, { ...item, ...row });
-            //                 props.setData(newData);
-            //             }
-            //         })
-            //         .catch((error) => console.log(error));
-
-            //     setEditingKey("");
-            // } else {
-            //     console.log("Index not found, failed to edit");
-            //     //newData.push(row);
-            //     //setData(newData);
-            //     setEditingKey("");
-            // }
         } catch (errInfo) {
             setEditingKey("");
             console.log("Validate Failed:", errInfo);
@@ -365,36 +364,9 @@ const HSTable = (props) => {
                 newData: {},
             },
         });
-        // if (index > -1) {
-        //     console.log("ketemu");
-        //     fetch(hostname + "/data-source/delete-hs", {
-        //         signal: controller.signal,
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({
-        //             TAHUN: props.tahun,
-        //             ID_HS: newData[index].idHS,
-        //         }),
-        //     })
-        //         .then((response) => {
-        //             if (response.ok) {
-        //                 newData.splice(index, 1);
-        //                 props.setData(newData);
-        //             }
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         });
-        // } else {
-        //     console.log("situ");
-        // }
     };
 
     console.log(props.tahun, props.wilayahProject);
-
-    // useEffect(() => {}, [props.tahun, props.wilayahProject, props.data]);
 
     return (
         <Form form={form} component={false}>
