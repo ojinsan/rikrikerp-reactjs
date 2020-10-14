@@ -201,7 +201,7 @@ const HSForm = (props) => {
                             >
                                 <Input
                                     style={{ width: "100%" }}
-                                    placeholder="Bil. bulat"
+                                    placeholder="Satuan HS"
                                     value={satuan}
                                     onChange={(e) => setSatuan(e.target.value)}
                                 />
@@ -217,6 +217,7 @@ const HSForm = (props) => {
                                         message: "Type HS harus terisi",
                                     },
                                 ]}
+                                initialValue="Bahan"
                             >
                                 <Select
                                     placeholder="Select"

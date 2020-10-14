@@ -106,7 +106,7 @@ const HS = (props) => {
             "Info: HSs(dot)selectedOption is changed to " + HSs.selectedOption
         );
         setShowHSForm(false);
-        if (HSs.selectedOption === "FETCH") {
+        if (HSs.selectedOption === "FETCH" && tahun && wilayahProject) {
             // dispatch({ type: "FETCH_DATA" });
             fetch(
                 hostname +

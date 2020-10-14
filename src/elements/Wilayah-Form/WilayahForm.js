@@ -35,7 +35,7 @@ var Wform = null; // form reference
 const WilayahForm = (props) => {
     const [wilayah, setWilayah] = useState("");
     const [divreDaop, setDivreDaop] = useState("");
-    const [kecamatan, setKecamatan] = useState("");
+    // const [kecamatan, setKecamatan] = useState("");
     const [kabupatenKotamadya, setKabupatenKotamadya] = useState("");
     const [provinsi, setProvinsi] = useState("");
 
@@ -44,7 +44,7 @@ const WilayahForm = (props) => {
     const resetForm = () => {
         setWilayah("");
         setDivreDaop("");
-        setKecamatan("");
+        // setKecamatan("");
         setKabupatenKotamadya("");
         setProvinsi("");
         Wform.resetFields();
@@ -54,7 +54,7 @@ const WilayahForm = (props) => {
         const wilayahdata = {
             WILAYAH: wilayah,
             DIVRE_DAOP: divreDaop,
-            KECAMATAN: kecamatan,
+            // KECAMATAN: kecamatan,
             KABUPATEN_KOTAMADYA: kabupatenKotamadya,
             PROVINSI: provinsi,
         };
@@ -190,7 +190,7 @@ const WilayahForm = (props) => {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
+                    {/* <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
                                 name="kecamatan"
@@ -210,7 +210,7 @@ const WilayahForm = (props) => {
                                 />
                             </Form.Item>
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
