@@ -44,7 +44,7 @@ const HSForm = (props) => {
         setUraian("");
         setSatuan("");
         setHarga("");
-        setType("");
+        setType("Bahan");
         setIdWilayah("");
         setTahun("");
         setSumberHarga("");

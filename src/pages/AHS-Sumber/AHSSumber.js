@@ -153,13 +153,47 @@ const AHSSumber = (props) => {
                 });
         } else if (AHSs.selectedOption == "DELETE") {
             if (AHSs.selectedIndex instanceof Array) {
+                if (AHSs.selectedIndex[0] > -1 && AHSs.selectedIndex[1] > -1) {
+                    fetch(hostname + "/data-source/delete-ahs-sumber-detail", {
+                        //signal: controller.signal,
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            ID_AHS_SUMBER_DETAIL:
+                                AHSs.data[AHSs.selectedIndex[0]].children[
+                                    AHSs.selectedIndex[1]
+                                ].id,
+                        }),
+                    }).then((response) => {
+                        if (response.ok) {
+                            console.log("Success from back end");
+                            const newData = JSON.parse(
+                                JSON.stringify(AHSs.data)
+                            );
+                            newData[AHSs.selectedIndex[0]].children.splice(
+                                AHSs.selectedIndex[1],
+                                1
+                            );
+                            // newData.splice(AHSs.selectedIndex, 1);
+                            console.log(newData);
+
+                            if (isMountedRef.current) {
+                                dispatch({
+                                    type: "DELETE_SUCCESS",
+                                    payload: newData,
+                                });
+                            }
+                        }
+                    });
+                }
                 // delete AHS detail
             } else {
                 console.log(
                     "delete AHS Utama with the index " + AHSs.selectedIndex
                 );
                 if (AHSs.selectedIndex > -1) {
-                    console.log("ketemu");
                     fetch(hostname + "/data-source/delete-ahs-sumber-utama", {
                         //signal: controller.signal,
                         method: "POST",
@@ -193,7 +227,42 @@ const AHSSumber = (props) => {
             }
         } else if (AHSs.selectedOption == "UPDATE") {
             if (AHSs.selectedIndex instanceof Array) {
-                // update AHS detail
+                if (AHSs.selectedIndex[0] > -1 && AHSs.selectedIndex[1] > -1) {
+                    console.log(AHSs.newData);
+                    fetch(hostname + "/data-source/update-ahs-sumber-detail", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(AHSs.newData),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                var newDatas = JSON.parse(
+                                    JSON.stringify(AHSs.data)
+                                );
+                                const item =
+                                    newDatas[AHSs.selectedIndex[0]].children[
+                                        AHSs.selectedIndex[1]
+                                    ];
+
+                                newDatas[AHSs.selectedIndex[0]].children.splice(
+                                    AHSs.selectedIndex[1],
+                                    1,
+                                    {
+                                        ...item,
+                                        ...AHSs.row,
+                                    }
+                                );
+                                console.log(newDatas);
+                                dispatch({
+                                    type: "UPDATE_SUCCESS",
+                                    payload: newDatas,
+                                });
+                            }
+                        })
+                        .catch((error) => console.log(error));
+                }
             } else {
                 console.log(AHSs.selectedIndex);
                 if (AHSs.selectedIndex > -1) {
@@ -250,7 +319,7 @@ const AHSSumber = (props) => {
                 </Button>
             </div>
 
-            <AHSSumberTable />
+            <AHSSumberTable AHSs={AHSs} dispatch={dispatch} />
 
             <AHSSumberForm
                 showDrawer={() => {
@@ -260,6 +329,7 @@ const AHSSumber = (props) => {
                     setShowAHSSumberForm(false);
                 }}
                 visible={showAHSSumberForm}
+                dispatch={dispatch}
             />
         </>
     );

@@ -257,7 +257,6 @@ const WilayahTable = (props) => {
     // MARK: Default Action Setup
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
-
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
