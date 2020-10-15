@@ -11,6 +11,8 @@ import {
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+// IMPORT: Other Elements
+import { AHSSumberDetailForm } from "../../elements";
 
 const EditableCell = ({
     editing,
@@ -66,11 +68,16 @@ const AHSSumberTable = (props) => {
     const [editingKey, setEditingKey] = useState("");
     const isEditing = (record) => record.key === editingKey;
     const [form] = Form.useForm();
+    const [AHSDetails, setAHSDetails] = useState([]);
+    const [AHSUtamaId, setAHSUtamaId] = useState(null);
 
     const [sortedInfo, setSortedInfo] = useState(null);
     const [filteredInfo, setFilteredInfo] = useState(null);
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [showAHSSumberDetailForm, setShowAHSSumberDetailForm] = useState(
+        false
+    );
     var searchInput = "";
 
     // MARK: Filter Set Up
@@ -316,6 +323,16 @@ const AHSSumberTable = (props) => {
                         >
                             <a> Delete </a>
                         </Popconfirm>
+                        {record.isAHS && (
+                            <a
+                                onClick={() => {
+                                    setAHSUtamaId(record.id);
+                                    setShowAHSSumberDetailForm(true);
+                                }}
+                            >
+                                Tambah AHSD
+                            </a>
+                        )}
                     </div>
                 ) : null;
             },
@@ -633,27 +650,46 @@ const AHSSumberTable = (props) => {
     // }, []);
 
     return (
-        <Form form={form} component={false}>
-            <Table
-                components={{
-                    body: {
-                        cell: EditableCell,
-                    },
-                }}
-                rowClassName={(record) => record.color.replace("#", "")}
-                bordered
-                dataSource={props.AHSs.data}
-                columns={mergedColumns}
-                rowClassName="editable-row"
-                pagination={{
-                    onChange: cancel,
-                }}
-                expandable={{
-                    expandIconColumnIndex: columns.length - 1,
-                }}
-                size="small"
-            />
-        </Form>
+        <>
+            <Form form={form} component={false}>
+                <Table
+                    components={{
+                        body: {
+                            cell: EditableCell,
+                        },
+                    }}
+                    rowClassName={(record) => record.color.replace("#", "")}
+                    bordered
+                    dataSource={props.AHSs.data}
+                    columns={mergedColumns}
+                    rowClassName="editable-row"
+                    pagination={{
+                        onChange: cancel,
+                    }}
+                    expandable={{
+                        expandIconColumnIndex: columns.length - 1,
+                    }}
+                    size="small"
+                />
+            </Form>
+            {showAHSSumberDetailForm && (
+                <AHSSumberDetailForm
+                    showDrawer={() => {
+                        setShowAHSSumberDetailForm(true);
+                    }}
+                    onClose={() => {
+                        setShowAHSSumberDetailForm(false);
+                    }}
+                    visible={showAHSSumberDetailForm}
+                    dispatch={props.dispatch}
+                    isNewAHS={false}
+                    setAHSDetails={(AHSDetails) => {
+                        setAHSDetails(AHSDetails);
+                    }}
+                    AHSUtamaId={AHSUtamaId}
+                />
+            )}
+        </>
     );
 };
 

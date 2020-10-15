@@ -23,6 +23,9 @@ import { globalVariable } from "../../utils/global-variable";
 // IMPORT: Other Components
 import { LoadingSpinner } from "../../components";
 
+// IMPORT: Other Elements
+import { AHSSumberDetailForm } from "../../elements";
+
 // SETUP: Initial
 const hostname = globalVariable("backendAddress");
 const { Option } = Select;
@@ -36,7 +39,7 @@ const AHSSumberForm = (props) => {
     const [namaAHS, setNamaAHS] = useState("");
     const [nomorAHS, setNomorAHS] = useState("");
     const [satuanAHS, setSatuanAHS] = useState("");
-    const [AHSkhusus, setAHSkhusus] = useState("");
+    const [AHSkhusus, setAHSkhusus] = useState(false);
     const [AHSDetails, setAHSDetails] = useState([]);
 
     const [namaAHSD, setNamaAHSD] = useState("");
@@ -47,13 +50,16 @@ const AHSSumberForm = (props) => {
     const [deskripsiAHSD, setDeskripsiAHSD] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
+    const [showAHSSumberDetailForm, setShowAHSSumberDetailForm] = useState(
+        false
+    );
 
     const resetForm = () => {
         setSumberAHS("");
         setNamaAHS("");
         setNomorAHS("");
         setSatuanAHS("");
-        setAHSkhusus(null);
+        setAHSkhusus(false);
 
         setNamaAHSD("");
         setSatuanAHSD("");
@@ -309,217 +315,30 @@ const AHSSumberForm = (props) => {
                         </Form>
                     </Panel>
                 </Collapse>
-
-                {/* AHS Detail Form */}
-                {AHSkhusus == false && (
-                    <Collapse
-                        key="2"
-                        defaultActiveKey={["1"]}
-                        ghost
-                        expandIconPosition={"right"}
-                        onChange={() => {
-                            console.log("On Change");
+                {!AHSkhusus && (
+                    <Button
+                        onClick={() => {
+                            setShowAHSSumberDetailForm(true);
                         }}
                     >
-                        <Panel header={<h4>Data AHS Detail</h4>} key="1">
-                            <Form
-                                layout="vertical"
-                                hideRequiredMark
-                                ref={(al) => {
-                                    AHSDform = al;
-                                }}
-                            >
-                                <Row gutter={16}>
-                                    <Col span={24}>
-                                        <Form.Item
-                                            name="namaAHSD"
-                                            label="Uraian AHS Detail"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "Nama uraian harus terisi",
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                placeholder="Masukan nama AHS"
-                                                onChange={(e) =>
-                                                    setNamaAHSD(e.target.value)
-                                                }
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-
-                                <Row gutter={16}>
-                                    <Col span={8}>
-                                        <Form.Item
-                                            name="kodeUraianAHSD"
-                                            label="Kode Uraian"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "Satuan AHS Detail harus terisi",
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                style={{ width: "100%" }}
-                                                placeholder="Satuan"
-                                                value={satuanAHS}
-                                                onChange={(e) =>
-                                                    setKodeUraianAHSD(
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={8}>
-                                        <Form.Item
-                                            name="satuanAHSD"
-                                            label="Satuan AHS Detail"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "Satuan AHS Detail harus terisi",
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                style={{ width: "100%" }}
-                                                placeholder="Satuan"
-                                                value={satuanAHS}
-                                                onChange={(e) =>
-                                                    setSatuanAHSD(
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={8}>
-                                        <Form.Item
-                                            name="koefisienAHSD"
-                                            label="Koefisien AHS Detail"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "No AHS harus terisi",
-                                                },
-                                            ]}
-                                        >
-                                            <InputNumber
-                                                style={{ width: "100%" }}
-                                                placeholder="Bil. bulat"
-                                                value={nomorAHS}
-                                                onChange={(e) =>
-                                                    setKoefisienAHSD(e)
-                                                }
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={8}>
-                                        <Form.Item
-                                            name="kelompokAHSD"
-                                            label="Kelompok AHS Detail"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "Silahkan pilih salah satu",
-                                                },
-                                            ]}
-                                        >
-                                            <Select
-                                                placeholder="Select"
-                                                onChange={(e) =>
-                                                    setKelompokAHSD(e)
-                                                }
-                                            >
-                                                <Option value="Upah">
-                                                    Upah
-                                                </Option>
-                                                <Option value="Bahan">
-                                                    Bahan
-                                                </Option>
-                                            </Select>
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row gutter={16}>
-                                    <Col span={24}>
-                                        <Form.Item
-                                            name="deskripsiAHSD"
-                                            label="Description"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message:
-                                                        "please enter url description",
-                                                },
-                                            ]}
-                                        >
-                                            <Input.TextArea
-                                                rows={4}
-                                                placeholder="please enter url description"
-                                                onChange={(e) =>
-                                                    setDeskripsiAHSD(
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                            </Form>
-                            <Button
-                                onClick={() => {
-                                    console.log("hei");
-                                    onAddAHSD();
-                                }}
-                                style={{ marginRight: 8 }}
-                            >
-                                Add
-                            </Button>
-                        </Panel>
-
-                        {AHSDetails.map((item, index) => (
-                            <div key={index}>
-                                {item.KODE_URAIAN +
-                                    " " +
-                                    item.KELOMPOK_URAIAN +
-                                    " " +
-                                    item.URAIAN +
-                                    " - " +
-                                    item.KOEFISIEN_URAIAN +
-                                    " - " +
-                                    item.SATUAN_URAIAN}
-                            </div>
-                        ))}
-                        {/* <List
-                            itemLayout="horizontal"
-                            dataSource={AHSDetails}
-                            renderItem={(AHSdetails) => (
-                                <List.Item key={AHSdetails.namaAHSD}>
-                                    <List.Item.Meta
-                                        title={<a>{AHSdetails.namaAHSD}</a>}
-                                        description={toString(
-                                            AHSdetails.satuanAHSD +
-                                                " - " +
-                                                AHSdetails.koefisienAHSD +
-                                                " - " +
-                                                AHSdetails.kelompokAHSD
-                                        )}
-                                    />
-                                </List.Item>
-                            )}
-                        /> */}
-                    </Collapse>
+                        Tambah AHSD
+                    </Button>
+                )}
+                {showAHSSumberDetailForm && (
+                    <AHSSumberDetailForm
+                        showDrawer={() => {
+                            setShowAHSSumberDetailForm(true);
+                        }}
+                        onClose={() => {
+                            setShowAHSSumberDetailForm(false);
+                        }}
+                        visible={showAHSSumberDetailForm}
+                        dispatch={props.dispatch}
+                        isNewAHS={true}
+                        setAHSDetails={(AHSDetails) => {
+                            setAHSDetails(AHSDetails);
+                        }}
+                    />
                 )}
             </Drawer>
         </div>
