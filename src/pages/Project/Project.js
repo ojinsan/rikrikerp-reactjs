@@ -304,6 +304,7 @@ const Project = () => {
                     setShowProjectForm(false);
                 }}
                 visible={showProjectForm}
+                dispatch={dispatch}
             />
         </>
     );

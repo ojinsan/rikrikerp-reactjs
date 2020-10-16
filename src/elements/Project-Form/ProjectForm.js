@@ -104,6 +104,17 @@ const ProjectForm = (props) => {
                         console.log(responseBody);
                         resetForm();
                         props.onClose();
+                        props.dispatch({
+                            type: "ACTION_SELECTED",
+                            payload: {
+                                option: "FETCH",
+                                index: -1,
+                                newData: {},
+                                row: {},
+                            },
+                        });
+                    } else {
+                        console.log("Failed");
                     }
                 } catch (err) {
                     alert(err.message);

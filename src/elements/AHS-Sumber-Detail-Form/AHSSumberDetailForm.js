@@ -136,7 +136,6 @@ const AHSSumberDetailForm = (props) => {
                 KETERANGAN_URAIAN: deskripsiAHSD,
             });
             setAHSDetails(AHSDetailsTemp);
-            resetForm();
         });
     };
 
