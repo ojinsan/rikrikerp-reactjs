@@ -168,7 +168,7 @@ const HS = (props) => {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        TAHUN: props.tahun,
+                        TAHUN: tahun,
                         ID_HS: HSs.data[HSs.selectedIndex].idHS,
                     }),
                 }).then((response) => {
@@ -212,6 +212,17 @@ const HS = (props) => {
                             dispatch({
                                 type: "UPDATE_SUCCESS",
                                 payload: newDatas,
+                            });
+                        } else {
+                            console.log("fetch failed");
+                            dispatch({
+                                type: "ACTION_SELECTED",
+                                payload: {
+                                    option: "FETCH",
+                                    index: -1,
+                                    newData: {},
+                                    row: {},
+                                },
                             });
                         }
                     })

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // IMPORT: Material Kit from ant-design
 import {
@@ -34,13 +34,47 @@ const ProjectForm = (props) => {
     const [namaProject, setNamaProject] = useState("");
     const [wilayahProject, setWilayahProject] = useState("");
     const [tahun, setTahun] = useState("");
+    const [tahuns, setTahuns] = useState("");
+    const [wilayahs, setWilayahs] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        fetch(hostname + "/base/get-wilayah-full-data", {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                setWilayahs(response.wilayah);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        fetch(hostname + "/base/get-year", {
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                setTahuns(response.TAHUNS);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     const resetForm = () => {
         setNamaProject("");
         setWilayahProject("");
-        setTahun("");
+        setTahuns("");
         Pform.resetFields();
     };
 
@@ -56,7 +90,7 @@ const ProjectForm = (props) => {
                 setIsLoading(true);
                 try {
                     const response = await fetch(
-                        hostname + "/project/post-new-project?TAHUN=2010",
+                        hostname + "/project/post-new-project?TAHUN=" + tahun,
                         {
                             method: "POST",
                             headers: {
@@ -164,8 +198,15 @@ const ProjectForm = (props) => {
                                     placeholder="Select"
                                     onChange={(e) => setWilayahProject(e)}
                                 >
-                                    <Option value="1">Jakarta</Option>
-                                    <Option value="2">Bandung</Option>
+                                    {wilayahs &&
+                                        wilayahs.map((a) => (
+                                            <Option
+                                                key={a.ID_WILAYAH}
+                                                value={a.ID_WILAYAH}
+                                            >
+                                                {a.WILAYAH}
+                                            </Option>
+                                        ))}
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -184,8 +225,12 @@ const ProjectForm = (props) => {
                                     placeholder="Select"
                                     onChange={(e) => setTahun(e)}
                                 >
-                                    <Option value="2010">2010</Option>
-                                    <Option value="2011">2011</Option>
+                                    {tahuns &&
+                                        tahuns.map((a) => (
+                                            <Option key={a} value={a}>
+                                                {a}
+                                            </Option>
+                                        ))}
                                 </Select>
                             </Form.Item>
                         </Col>

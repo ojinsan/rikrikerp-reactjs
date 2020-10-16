@@ -13,6 +13,7 @@ import AHSProjectForm from "./AHS-Project-Form/AHSProjectForm";
 import AHSProjectTable from "./AHS-Project-Table/AHSProjectTable";
 
 import ProjectForm from "./Project-Form/ProjectForm";
+import ProjectTable from "./Project-Table/ProjectTable";
 import RABProjectBagianForm from "./RAB-Project-Bagian-Form/RABProjectBagianForm";
 
 import WilayahForm from "./Wilayah-Form/WilayahForm";
@@ -31,6 +32,7 @@ export {
     AHSProjectForm,
     AHSProjectTable,
     ProjectForm,
+    ProjectTable,
     RABProjectBagianForm,
     WilayahForm,
     WilayahTable,

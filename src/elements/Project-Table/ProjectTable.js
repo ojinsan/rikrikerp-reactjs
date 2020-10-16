@@ -12,6 +12,14 @@ import {
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 
+// ID_PROJECT": 1,
+//             "NAMA_PROJECT": "Matul",
+//             "TAHUN": "2012",
+//             "createdAt": "2020-10-16T07:27:02.000Z",
+//             "updatedAt": "2020-10-16T07:27:02.000Z",
+//             "ID_WILAYAH": 112,
+//             "WILAYAH": {
+
 const EditableCell = ({
     editing,
     dataIndex,
@@ -24,10 +32,9 @@ const EditableCell = ({
 }) => {
     var required = true;
     if (
-        dataIndex == "idHS" ||
-        dataIndex == "screenshot" ||
-        dataIndex == "sumberHarga" ||
-        dataIndex == "keterangan"
+        dataIndex == "tahun" ||
+        dataIndex == "wilayah" ||
+        dataIndex == "idProject"
     ) {
         required = false;
     }
@@ -56,7 +63,7 @@ const EditableCell = ({
     );
 };
 
-const HSTable = (props) => {
+const ProjectTable = (props) => {
     const [editingKey, setEditingKey] = useState("");
     const isEditing = (record) => record.key === editingKey;
     const [form] = Form.useForm();
@@ -145,76 +152,41 @@ const HSTable = (props) => {
     // MARK: Column Set Up
     const columns = [
         {
-            title: "ID HS",
-            dataIndex: "idHS",
-            width: "25%",
+            title: "ID Project",
+            dataIndex: "idProject",
+            width: "10%",
             editable: true,
         },
         {
-            title: "uraian",
-            dataIndex: "uraian",
+            title: "Nama Project",
+            dataIndex: "namaProject",
+            width: "25%",
+            editable: true,
+            sorter: {
+                compare: (a, b) => a.namaProject.localeCompare(b.namaProject),
+            },
+            ...getColumnSearchProps("namaProject"),
+        },
+        {
+            title: "Tahun",
+            dataIndex: "tahun",
             width: "15%",
             editable: true,
             sorter: {
-                compare: (a, b) => a.uraian.localeCompare(b.uraian),
+                compare: (a, b) => a.tahun - b.tahun,
             },
-            ...getColumnSearchProps("uraian"),
+            ...getColumnSearchProps("tahun"),
         },
+
         {
-            title: "satuan",
-            dataIndex: "satuan",
-            width: "40%",
+            title: "wilayah",
+            dataIndex: "wilayah",
+            width: "30%",
             editable: true,
             sorter: {
-                compare: (a, b) => a.satuan.localeCompare(b.satuan),
+                compare: (a, b) => a.wilayah.localeCompare(b.wilayah),
             },
-            ...getColumnSearchProps("satuan"),
-        },
-        {
-            title: "harga",
-            dataIndex: "harga",
-            width: "40%",
-            editable: true,
-            sorter: {
-                compare: (a, b) => a.harga - b.harga,
-            },
-            ...getColumnSearchProps("harga"),
-        },
-        {
-            title: "kelompok",
-            dataIndex: "kelompok",
-            width: "40%",
-            editable: true,
-            sorter: {
-                compare: (a, b) => a.kelompok.localeCompare(b.kelompok),
-            },
-            ...getColumnSearchProps("kelompok"),
-        },
-        {
-            title: "sumber harga",
-            dataIndex: "sumberHarga",
-            width: "40%",
-            editable: true,
-            sorter: {
-                compare: (a, b) => a.sumberHarga.localeCompare(b.sumberHarga),
-            },
-            ...getColumnSearchProps("sumberHarga"),
-        },
-        {
-            title: "keterangan",
-            dataIndex: "keterangan",
-            width: "40%",
-            editable: true,
-            sorter: {
-                compare: (a, b) => a.keterangan.localeCompare(b.keterangan),
-            },
-            ...getColumnSearchProps("keterangan"),
-        },
-        {
-            title: "screenshot",
-            dataIndex: "screenshot",
-            width: "40%",
-            editable: true,
+            ...getColumnSearchProps("wilayah"),
         },
         {
             title: "operation",
@@ -294,14 +266,10 @@ const HSTable = (props) => {
 
     const edit = (record) => {
         form.setFieldsValue({
-            idHS: "",
-            uraian: "",
-            satuan: "",
-            harga: "",
-            kelompok: "",
-            sumberHarga: "",
-            keterangan: "",
-            screenshot: "",
+            idProject: "",
+            namaProject: "",
+            tahun: "",
+            wilayah: "",
             ...record,
         });
         setEditingKey(record.key);
@@ -315,22 +283,16 @@ const HSTable = (props) => {
     const save = async (key) => {
         try {
             var row = await form.validateFields();
-            const newData = [...props.HSs.data];
+            const newData = [...props.projects.data];
             row = { ...row, key: key };
 
             const index = newData.findIndex((item) => key === item.key);
 
             const editedContent = {
-                ID_HS: row.idHS,
-                URAIAN: row.uraian,
-                SATUAN: row.satuan,
-                HARGA: row.harga,
-                TYPE: row.kelompok,
-                //ID_WILAYAH: "1",
-                TAHUN: props.tahun,
-                SUMBER_HARGA: row.sumberHarga,
-                KETERANGAN: row.keterangan,
-                SCREENSHOT_HS: row.screenshot,
+                NAMA_PROJECT: row.namaProject,
+                ID_PROJECT: row.idProject,
+                TAHUN: row.tahun,
+                // ID_WILAYAH: //nanti masukin value si id nya, option editnya harus dirubah dan render nama2 wilayah ,
             };
 
             props.dispatch({
@@ -350,7 +312,7 @@ const HSTable = (props) => {
     };
 
     const handleDelete = (key, controller) => {
-        const newData = JSON.parse(JSON.stringify(props.HSs.data));
+        const newData = JSON.parse(JSON.stringify(props.projects.data));
         const index = newData.findIndex((item) => key === item.key);
         console.log(
             "try deleting record with key: " + key + " at index: " + index
@@ -365,27 +327,27 @@ const HSTable = (props) => {
         });
     };
 
-    console.log(props.tahun, props.wilayahProject);
-
     return (
-        <Form form={form} component={false}>
-            <Table
-                components={{
-                    body: {
-                        cell: EditableCell,
-                    },
-                }}
-                bordered
-                dataSource={props.HSs.data}
-                columns={mergedColumns}
-                rowClassName="editable-row"
-                pagination={{
-                    onChange: cancel,
-                }}
-                size="small"
-            />
-        </Form>
+        <div>
+            <Form form={form} component={false}>
+                <Table
+                    components={{
+                        body: {
+                            cell: EditableCell,
+                        },
+                    }}
+                    bordered
+                    dataSource={props.projects.data}
+                    columns={mergedColumns}
+                    rowClassName="editable-row"
+                    pagination={{
+                        onChange: cancel,
+                    }}
+                    size="small"
+                />
+            </Form>
+        </div>
     );
 };
 
-export default HSTable;
+export default ProjectTable;

@@ -111,7 +111,15 @@ const AHSSumberForm = (props) => {
                         const responseBody = await response.json();
                         console.log(responseBody);
                         resetForm();
-                        props.onClose();
+                        props.dispatch({
+                            type: "ACTION_SELECTED",
+                            payload: {
+                                option: "FETCH",
+                                index: -1,
+                                newData: {},
+                                row: {},
+                            },
+                        });
                     } else {
                         throw new Error(
                             "Gagal menyimpan dalam database. Status:" +
@@ -129,18 +137,18 @@ const AHSSumberForm = (props) => {
             });
     };
 
-    const onAddAHSD = () => {
-        const AHSDetailsTemp = JSON.parse(JSON.stringify(AHSDetails));
-        AHSDetailsTemp.push({
-            URAIAN: namaAHSD,
-            KODE_URAIAN: kodeUraianAHSD,
-            KELOMPOK_URAIAN: kelompokAHSD,
-            SATUAN_URAIAN: satuanAHSD,
-            KOEFISIEN_URAIAN: koefisienAHSD,
-            KETERANGAN_URAIAN: deskripsiAHSD,
-        });
-        setAHSDetails(AHSDetailsTemp);
-    };
+    // const onAddAHSD = () => {
+    //     const AHSDetailsTemp = JSON.parse(JSON.stringify(AHSDetails));
+    //     AHSDetailsTemp.push({
+    //         URAIAN: namaAHSD,
+    //         KODE_URAIAN: kodeUraianAHSD,
+    //         KELOMPOK_URAIAN: kelompokAHSD,
+    //         SATUAN_URAIAN: satuanAHSD,
+    //         KOEFISIEN_URAIAN: koefisienAHSD,
+    //         KETERANGAN_URAIAN: deskripsiAHSD,
+    //     });
+    //     setAHSDetails(AHSDetailsTemp);
+    // };
 
     return (
         <div>

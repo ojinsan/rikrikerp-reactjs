@@ -81,6 +81,9 @@ const AHSSumberDetailForm = (props) => {
                             }
                         );
                         if (response.ok) {
+                            console.log(
+                                "berhasil ahs sumber detail form, response ok"
+                            );
                             const responseBody = await response.json();
                             console.log(responseBody);
                             resetForm();
