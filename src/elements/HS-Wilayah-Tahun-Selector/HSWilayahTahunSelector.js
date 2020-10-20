@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-import { Table, Input, InputNumber, Popconfirm, Form, Select } from "antd";
+import {
+    Table,
+    Input,
+    InputNumber,
+    Popconfirm,
+    Form,
+    Select,
+    Col,
+    Row,
+} from "antd";
 import { globalVariable } from "../../utils/global-variable";
 
 const hostname = globalVariable("backendAddress");
@@ -51,36 +60,47 @@ const HSWilayahTahunSelector = (props) => {
 
     return (
         <div>
-            <div className="d-flex">
-                <Form.Item label="Tahun" className="flex-fill">
-                    <Select
-                        onChange={(e) => {
-                            onSelectedTahunValue(e);
-                        }}
-                    >
-                        {tahuns.map((atahun) => (
-                            <Select.Option key={atahun} value={atahun}>
-                                {atahun}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-                <Form.Item label="Wilayah" className="flex-fill">
-                    <Select
-                        onChange={(e) => {
-                            onSelectedWilayahValue(e);
-                        }}
-                    >
-                        {wilayahs.map((satuWilayah) => (
-                            <Select.Option
-                                key={satuWilayah.ID_WILAYAH}
-                                value={satuWilayah.ID_WILAYAH}
-                            >
-                                {satuWilayah.WILAYAH}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
+            <div className="d-flex" style={{ width: 1080 }}>
+                <Form layout="vertical" hideRequiredMark>
+                    <Row gutter={8} style={{ width: 1080 }}>
+                        <Col span={12}>
+                            <Form.Item label="Tahun" className="flex-fill">
+                                <Select
+                                    onChange={(e) => {
+                                        onSelectedTahunValue(e);
+                                    }}
+                                >
+                                    {tahuns.map((atahun) => (
+                                        <Select.Option
+                                            key={atahun}
+                                            value={atahun}
+                                        >
+                                            {atahun}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Wilayah" className="flex-fill">
+                                <Select
+                                    onChange={(e) => {
+                                        onSelectedWilayahValue(e);
+                                    }}
+                                >
+                                    {wilayahs.map((satuWilayah) => (
+                                        <Select.Option
+                                            key={satuWilayah.ID_WILAYAH}
+                                            value={satuWilayah.ID_WILAYAH}
+                                        >
+                                            {satuWilayah.WILAYAH}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Form>
             </div>
         </div>
     );
