@@ -60,9 +60,9 @@ const HSWilayahTahunSelector = (props) => {
 
     return (
         <div>
-            <div className="d-flex" style={{ width: 1080 }}>
+            <div className="d-flex" style={{ width: "100%" }}>
                 <Form layout="vertical" hideRequiredMark>
-                    <Row gutter={8} style={{ width: 1080 }}>
+                    <Row gutter={8} style={{ width: "60vw" }}>
                         <Col span={12}>
                             <Form.Item label="Tahun" className="flex-fill">
                                 <Select

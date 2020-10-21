@@ -15,6 +15,7 @@ import AHSProjectTable from "./AHS-Project-Table/AHSProjectTable";
 import ProjectForm from "./Project-Form/ProjectForm";
 import ProjectTable from "./Project-Table/ProjectTable";
 import RABProjectBagianForm from "./RAB-Project-Bagian-Form/RABProjectBagianForm";
+import RABProjectBagianTable from "./RAB-Project-Bagian-Table/RABProjectBagianTable";
 
 import WilayahForm from "./Wilayah-Form/WilayahForm";
 import WilayahTable from "./Wilayah-Table/WilayahTable";
@@ -34,6 +35,7 @@ export {
     ProjectForm,
     ProjectTable,
     RABProjectBagianForm,
+    RABProjectBagianTable,
     WilayahForm,
     WilayahTable,
 };

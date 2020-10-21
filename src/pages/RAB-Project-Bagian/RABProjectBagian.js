@@ -8,6 +8,7 @@ import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
     HSTable,
     RABProjectBagianForm,
+    RABProjectBagianTable,
     HSWilayahTahunSelector,
 } from "../../elements";
 import { SortBox } from "../../components";
@@ -125,27 +126,32 @@ const RABProjectBagian = () => {
                 .then((response) => {
                     var j = 0;
                     var tableData = [];
-                    response.Wilayah &&
-                        response.Wilayah.forEach((wilayah) => {
-                            tableData.push(
-                                ...wilayah.HS.map((hs, idx) => {
-                                    const data = {
-                                        idHS: hs.ID_HS,
-                                        uraian: hs.URAIAN,
-                                        satuan: hs.SATUAN,
-                                        harga: hs.HARGA,
-                                        kelompok: hs.TYPE,
-                                        sumberHarga: hs.SUMBER_HARGA,
-                                        keterangan: hs.KETERANGAN,
-                                        screenshot: hs.SCREENSHOT_HS,
-                                        key: j.toString(),
-                                        // ID_WILAYAH
-                                    };
-                                    j++;
-                                    return data;
-                                })
-                            );
-                        });
+                    response.RABProjectBagian &&
+                        (tableData = response.RABProjectBagian.map(
+                            (rabpb, idx) => {
+                                const data = {
+                                    //props
+                                    jenis: rabpb.JENIS,
+                                    bagian: rabpb.BAGIAN,
+                                    subBagian: rabpb.SUB_BAGIAN,
+                                    idTtd: rabpb.ID_TTD,
+                                    keteranganJudulRekap:
+                                        rabpb.KETERANGAN_JUDUL_REKAP,
+                                    jumlahRab: rabpb.JUMLAH_RAB,
+                                    totalUpahTdp: rabpb.TOTAL_UPAH_TDP,
+                                    TotalBahanTdp: rabpb.TOTAL_BAHAN_TDP,
+                                    totalUpahNonTdp: rabpb.TOTAL_UPAH_NON_TDP,
+                                    totalBahanNonTdp: rabpb.TOTAL_BAHAN_NON_TDP,
+                                    keteranganBagBawahRab:
+                                        rabpb.KETERANGAN_BAG_BAWAH_RAB,
+                                    key: j.toString(),
+                                    // ID_WILAYAH
+                                };
+                                j++;
+                                return data;
+                            }
+                        ));
+
                     return tableData;
                 })
                 .then((data) => {
@@ -255,7 +261,14 @@ const RABProjectBagian = () => {
                     <PlusOutlined /> New RAB Project Bagian
                 </Button>
             </div>
+            <RABProjectBagianTable
+                RABPBs={RABPBs}
+                tahun={tahun}
+                dispatch={dispatch}
+            />
             <RABProjectBagianForm
+                PROJECT_ID={PROJECT_ID}
+                tahun={tahun}
                 showDrawer={() => {
                     setShowRABPBForm(true);
                 }}
@@ -263,6 +276,7 @@ const RABProjectBagian = () => {
                     setShowRABPBForm(false);
                 }}
                 visible={showRABPBForm}
+                dispatch={dispatch}
             />
         </>
     );
