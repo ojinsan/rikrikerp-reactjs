@@ -131,6 +131,7 @@ const RABProjectBagian = () => {
                             (rabpb, idx) => {
                                 const data = {
                                     //props
+                                    idRABPB: rabpb.ID_RAB_PROJECT_BAGIAN,
                                     jenis: rabpb.JENIS,
                                     bagian: rabpb.BAGIAN,
                                     subBagian: rabpb.SUB_BAGIAN,
@@ -139,7 +140,7 @@ const RABProjectBagian = () => {
                                         rabpb.KETERANGAN_JUDUL_REKAP,
                                     jumlahRab: rabpb.JUMLAH_RAB,
                                     totalUpahTdp: rabpb.TOTAL_UPAH_TDP,
-                                    TotalBahanTdp: rabpb.TOTAL_BAHAN_TDP,
+                                    totalBahanTdp: rabpb.TOTAL_BAHAN_TDP,
                                     totalUpahNonTdp: rabpb.TOTAL_UPAH_NON_TDP,
                                     totalBahanNonTdp: rabpb.TOTAL_BAHAN_NON_TDP,
                                     keteranganBagBawahRab:
@@ -168,14 +169,14 @@ const RABProjectBagian = () => {
             // dispatch({ type: "DELETE" });
             if (RABPBs.selectedIndex > -1) {
                 console.log("ketemu");
-                fetch(hostname + "/data-source/delete-hs", {
+                fetch(hostname + "/project/delete-rab-project-bagian", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         TAHUN: tahun,
-                        ID_HS: RABPBs.data[RABPBs.selectedIndex].idHS,
+                        ID_RABPB: RABPBs.data[RABPBs.selectedIndex].idRABPB,
                     }),
                 }).then((response) => {
                     if (response.ok) {
@@ -198,13 +199,18 @@ const RABProjectBagian = () => {
         } else if (RABPBs.selectedOption == "UPDATE") {
             console.log(RABPBs.selectedIndex);
             if (RABPBs.selectedIndex > -1) {
-                fetch(hostname + "/data-source/update-hs", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(RABPBs.newData),
-                })
+                fetch(
+                    hostname +
+                        "/project/update-rab-project-bagian?TAHUN=" +
+                        tahun,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(RABPBs.newData),
+                    }
+                )
                     .then((response) => {
                         if (response.ok) {
                             var newDatas = JSON.parse(

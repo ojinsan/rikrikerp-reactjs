@@ -359,22 +359,26 @@ const RABProjectBagianTable = (props) => {
     const save = async (key) => {
         try {
             var row = await form.validateFields();
-            const newData = [...props.HSs.data];
+            const newData = [...props.RABPBs.data];
             row = { ...row, key: key };
 
             const index = newData.findIndex((item) => key === item.key);
 
+            console.log(row);
             const editedContent = {
-                ID_HS: row.idHS,
-                URAIAN: row.uraian,
-                SATUAN: row.satuan,
-                HARGA: row.harga,
-                TYPE: row.kelompok,
-                //ID_WILAYAH: "1",
                 TAHUN: props.tahun,
-                SUMBER_HARGA: row.sumberHarga,
-                KETERANGAN: row.keterangan,
-                SCREENSHOT_HS: row.screenshot,
+                ID_RAB_PROJECT_BAGIAN: newData[index].idRABPB,
+                JENIS: row.jenis,
+                BAGIAN: row.bagian,
+                SUB_BAGIAN: row.subBagian,
+                ID_TTD: row.idTtd,
+                KETERANGAN_JUDUL_REKAP: row.keteranganJudulRekap,
+                JUMLAH_RAB: row.jumlahRab,
+                TOTAL_UPAH_TDP: row.totalUpahTdp,
+                TOTAL_BAHAN_TDP: row.totalBahanTdp,
+                TOTAL_UPAH_NON_TDP: row.totalUpahNonTdp,
+                TOTAL_BAHAN_NON_TDP: row.totalBahanNonTdp,
+                KETERANGAN_BAG_BAWAH_RAB: row.keteranganBagBawahRab,
             };
 
             props.dispatch({
@@ -394,7 +398,7 @@ const RABProjectBagianTable = (props) => {
     };
 
     const handleDelete = (key, controller) => {
-        const newData = JSON.parse(JSON.stringify(props.HSs.data));
+        const newData = JSON.parse(JSON.stringify(props.RABPBs.data));
         const index = newData.findIndex((item) => key === item.key);
         console.log(
             "try deleting record with key: " + key + " at index: " + index
@@ -409,7 +413,7 @@ const RABProjectBagianTable = (props) => {
         });
     };
 
-    console.log(props.tahun, props.wilayahProject);
+    //console.log(props.tahun, props.wilayahProject);
 
     return (
         <Form form={form} component={false}>
