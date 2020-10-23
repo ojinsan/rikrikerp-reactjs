@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // IMPORT: Material Kit from ant-design
 import {
@@ -82,6 +82,25 @@ const RABForm = (props) => {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const [data, setData] = useState([]);
+
+    function onChange(value) {
+        console.log(`selected ${value}`);
+        setAhsUtamaProjectId(value);
+    }
+
+    function onBlur() {
+        console.log("blur");
+    }
+
+    function onFocus() {
+        console.log("focus");
+    }
+
+    function onSearch(val) {
+        console.log("search:", val);
+    }
+
     const resetForm = () => {
         setItemPekerjaan("");
         setNoUrut1("");
@@ -98,6 +117,64 @@ const RABForm = (props) => {
         setPm(false);
         Pform.resetFields();
     };
+
+    useEffect(() => {
+        fetch(
+            hostname +
+                "/project/get-ahs-project-full-data?TAHUN=" +
+                props.tahun,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            }
+        )
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                var tableData = response.AHS_PROJECT_UTAMA.map((ahs, idx) => {
+                    const data = {
+                        noUrut: ahs.NO_URUT,
+                        id: ahs.ID_AHS_PROJECT_UTAMA,
+                        isAHS: true,
+                        key: idx.toString(),
+                        nameBaru: ahs.NAMA_AHS_PROJECT,
+                        nameOri: ahs.AHS_SUMBER_UTAMA.NAMA_AHS,
+                        noAHS: ahs.NOMOR_AHS_PROJECT,
+                        kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
+                        satuan: ahs.AHS_SUMBER_UTAMA.SATUAN_AHS,
+                        sumber: ahs.AHS_SUMBER_UTAMA.SUMBER_AHS,
+                        koefisien: ahs.KOEFISIEN_AHS,
+                        keterangan: ahs.PENJELASAN_KOEFISIEN_AHS,
+
+                        children: ahs.AHS_PROJECT_DETAIL.map((ahsd, i) => {
+                            return {
+                                key: idx.toString() + "-" + i.toString(),
+                                id: ahsd.ID_AHS_PROJECT_DETAIL,
+                                isAHS: false,
+                                name: ahsd.P_URAIAN,
+                                kodeUraian: ahsd.KODE_URAIAN,
+                                //noAHS: ahsd.ID_AHS_SUMBER_UTAMA,
+                                kelompok: ahsd.P_KELOMPOK_URAIAN,
+                                satuan: ahsd.P_SATUAN_URAIAN,
+                                koefisien: ahsd.P_KOEFISIEN_URAIAN,
+                                keterangan: ahsd.P_KETERANGAN_URAIAN,
+                                HS: ahsd.hs ? ahsd.HS.HARGA : 0,
+                            };
+                        }),
+                    };
+                    if (data.children.length == 0) {
+                        delete data.children;
+                    }
+                    return data;
+                });
+                return tableData;
+            })
+            .then((tableData) => {
+                setData(tableData);
+            });
+    }, []);
 
     const onSubmit = () => {
         const project = {
@@ -479,6 +556,52 @@ const RABForm = (props) => {
                             // "bahanNonTdp",
                             // "pm",
                         }
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={4}>
+                            <Form.Item
+                                //name="ahsUtamaProjectId"
+                                label="AHS Utama Project ID"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Pilihan harus terisi",
+                                    },
+                                ]}
+                                initialValue={false}
+                            >
+                                <Select
+                                    showSearch
+                                    style={{ width: 600 }}
+                                    placeholder="Select a person"
+                                    optionFilterProp="children"
+                                    onChange={onChange}
+                                    onFocus={onFocus}
+                                    onBlur={onBlur}
+                                    onSearch={onSearch}
+                                    filterOption={(input, option) =>
+                                        data.length > 0
+                                            ? option.alias
+                                                  .toLowerCase()
+                                                  .indexOf(
+                                                      input.toLowerCase()
+                                                  ) >= 0
+                                            : ""
+                                    }
+                                >
+                                    {data.length > 0 &&
+                                        data.map((item) => (
+                                            <Option
+                                                value={item.id}
+                                                key={item.id}
+                                                alias={item.nameBaru}
+                                            >
+                                                <div>{item.nameBaru}</div>
+                                            </Option>
+                                        ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
                     </Row>
                 </Form>
             </Drawer>
