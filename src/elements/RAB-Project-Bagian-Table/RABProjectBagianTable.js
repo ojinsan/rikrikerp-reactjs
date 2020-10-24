@@ -338,14 +338,13 @@ const RABProjectBagianTable = (props) => {
 
     const edit = (record) => {
         form.setFieldsValue({
-            idHS: "",
-            uraian: "",
-            satuan: "",
-            harga: "",
-            kelompok: "",
-            sumberHarga: "",
-            keterangan: "",
-            screenshot: "",
+            jenis: "",
+            bagian: "",
+            subBagian: "",
+            ID_TTD: 1, //later
+            keteranganJudulRekap: "",
+            jumlahRab: "",
+            keteranganBagBawahRab: "",
             ...record,
         });
         setEditingKey(record.key);

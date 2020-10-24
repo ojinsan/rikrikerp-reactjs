@@ -140,7 +140,8 @@ const RAB = () => {
                                 bahanNonTdp: RAB.RAB_DETAILS[0].BAHAN_NON_TDP,
                                 pm: RAB.RAB_DETAILS[0].PM,
                                 idRabJudul: RAB.RAB_DETAILS[0].ID_RAB_JUDUL,
-                                //idAHSProjectUtama:ID_AHS_PROJECT_UTAMA,
+                                idAHSProjectUtama:
+                                    RAB.RAB_DETAILS[0].ID_AHS_PROJECT_UTAMA,
 
                                 key: j.toString(),
                                 // ID_WILAYAH
@@ -165,14 +166,14 @@ const RAB = () => {
             // dispatch({ type: "DELETE" });
             if (RABs.selectedIndex > -1) {
                 console.log("ketemu");
-                fetch(hostname + "/project/delete-rab", {
+                fetch(hostname + "/project/delete-rab-judul-detail", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         TAHUN: tahun,
-                        ID_RAB: RABs.data[RABs.selectedIndex].idHS,
+                        ID_RAB_JUDUL: RABs.data[RABs.selectedIndex].idRabJudul,
                     }),
                 }).then((response) => {
                     if (response.ok) {
@@ -195,7 +196,8 @@ const RAB = () => {
         } else if (RABs.selectedOption == "UPDATE") {
             console.log(RABs.selectedIndex);
             if (RABs.selectedIndex > -1) {
-                fetch(hostname + "/data-source/update-hs", {
+                console.log(RABs.newData);
+                fetch(hostname + "/project/update-rab-judul-detail", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -246,7 +248,7 @@ const RAB = () => {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h4>This is List of Projects Page</h4>
+                <h4>This is List of RAB Page</h4>
                 <Button
                     type="primary"
                     className="d-flex p-2 align-items-center"
@@ -254,7 +256,7 @@ const RAB = () => {
                         setShowRABForm(!showRABForm);
                     }}
                 >
-                    <PlusOutlined /> New Projects
+                    <PlusOutlined /> New RAB
                 </Button>
             </div>
             <RABForm
@@ -268,7 +270,7 @@ const RAB = () => {
                 tahun={tahun}
                 dispatch={dispatch}
             />
-            <RABTable RABs={RABs} />
+            <RABTable RABs={RABs} dispatch={dispatch} tahun={tahun} />
         </>
     );
 };
