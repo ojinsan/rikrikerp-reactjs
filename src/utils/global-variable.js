@@ -10,6 +10,6 @@ export const globalVariable = (request) => {
       //return "http://35.186.157.80:8080"
       //return "http://192.168.100.78:8080"
       //return "http://localhost:8080";
-      return "http://13.250.44.215:8080";
+      return "http://18.141.192.214:8080";
   }
 };
