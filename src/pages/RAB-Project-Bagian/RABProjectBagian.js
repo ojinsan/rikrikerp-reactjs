@@ -14,6 +14,8 @@ import {
 import { SortBox } from "../../components";
 import { globalVariable } from "../../utils/global-variable";
 
+import { useParams } from "react-router-dom";
+
 const hostname = globalVariable("backendAddress");
 
 // MARK: Initial Setup Function
@@ -87,8 +89,9 @@ function dataReducer(state, action) {
 }
 
 const RABProjectBagian = () => {
-  const PROJECT_ID = 1; //nanti cek di slug aja
-  const tahun = 2000; //nanti di cek di slug juga
+  let { projectid, tahun } = useParams();
+  const PROJECT_ID = projectid;
+
   const [showRABPBForm, setShowRABPBForm] = useState(false);
   const [RABPBs, dispatch] = useReducer(dataReducer, {
     loading: false,
