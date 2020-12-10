@@ -15,7 +15,6 @@ import {
   Collapse,
   List,
 } from "antd";
-import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 
 // IMPORT: Utilities
 import { globalVariable } from "../../utils/global-variable";
@@ -412,63 +411,9 @@ const RABForm = (props) => {
                   },
                 ]}
               >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  placeholder="Masukan jumlah detail"
+                <Select
+                  placeholder="Apakah Ada Detail?"
                   onChange={(e) => setDetail(e)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item
-                name="satuan"
-                label="Satuan"
-                rules={[
-                  {
-                    required: true,
-                    message: "Satuan harus terisi",
-                  },
-                ]}
-              >
-                <Input
-                  placeholder="Satuan"
-                  onChange={(e) => setSatuan(e.target.value)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item
-                name="volume"
-                label="Volume"
-                rules={[
-                  {
-                    required: true,
-                    message: "Masukan volume",
-                  },
-                ]}
-              >
-                <InputNumber
-                  style={{ width: "100%" }}
-                  placeholder="Masukan nilai volume"
-                  onChange={(e) => setVolume(e)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item
-                name="upahNonTdp"
-                label="Upah Non Tdp"
-                rules={[
-                  {
-                    required: true,
-                    message: "Pilihan harus terisi",
-                  },
-                ]}
-                initialValue={true}
-              >
-                <Select
-                  placeholder="Pilih jenis"
-                  onChange={(e) => setUpahNonTdp(e)}
                 >
                   <Option key="false" value={false}>
                     TIDAK
@@ -479,53 +424,124 @@ const RABForm = (props) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={4}>
-              <Form.Item
-                name="bahanNonTdp"
-                label="Bahan Non Tdp"
-                rules={[
-                  {
-                    required: true,
-                    message: "Pilihan harus terisi",
-                  },
-                ]}
-                initialValue={false}
-              >
-                <Select
-                  placeholder="Pilih jenis"
-                  onChange={(e) => setBahanNonTdp(e)}
+            {detail && (
+              <Col span={4}>
+                <Form.Item
+                  name="satuan"
+                  label="Satuan"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Satuan harus terisi",
+                    },
+                  ]}
                 >
-                  <Option key="false" value={false}>
-                    TIDAK
-                  </Option>
-                  <Option key="true" value={true}>
-                    YA
-                  </Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item
-                name="pm"
-                label="PM"
-                rules={[
-                  {
-                    required: true,
-                    message: "PM harus terisi",
-                  },
-                ]}
-                initialValue={false}
-              >
-                <Select placeholder="Pilih PM" onChange={(e) => setPm(e)}>
-                  <Option key="false" value={false}>
-                    TIDAK
-                  </Option>
-                  <Option key="true" value={true}>
-                    YA
-                  </Option>
-                </Select>
-              </Form.Item>
-            </Col>
+                  <Input
+                    placeholder="Satuan"
+                    onChange={(e) => setSatuan(e.target.value)}
+                  />
+                </Form.Item>
+              </Col>
+            )}
+            {detail && (
+              <Col span={4}>
+                <Form.Item
+                  name="volume"
+                  label="Volume"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Masukan volume",
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    placeholder="Masukan nilai volume"
+                    onChange={(e) => setVolume(e)}
+                  />
+                </Form.Item>
+              </Col>
+            )}
+            {detail && (
+              <Col span={4}>
+                <Form.Item
+                  name="upahNonTdp"
+                  label="Upah Non Tdp"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Pilihan harus terisi",
+                    },
+                  ]}
+                  initialValue={true}
+                >
+                  <Select
+                    placeholder="Pilih jenis"
+                    onChange={(e) => setUpahNonTdp(e)}
+                  >
+                    <Option key="false" value={false}>
+                      TIDAK
+                    </Option>
+                    <Option key="true" value={true}>
+                      YA
+                    </Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+            {detail && (
+              <Col span={4}>
+                <Form.Item
+                  name="bahanNonTdp"
+                  label="Bahan Non Tdp"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Pilihan harus terisi",
+                    },
+                  ]}
+                  initialValue={false}
+                >
+                  <Select
+                    placeholder="Pilih jenis"
+                    onChange={(e) => setBahanNonTdp(e)}
+                  >
+                    <Option key="false" value={false}>
+                      TIDAK
+                    </Option>
+                    <Option key="true" value={true}>
+                      YA
+                    </Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
+            {detail && (
+              <Col span={4}>
+                <Form.Item
+                  name="pm"
+                  label="PM"
+                  rules={[
+                    {
+                      required: true,
+                      message: "PM harus terisi",
+                    },
+                  ]}
+                  initialValue={false}
+                >
+                  <Select placeholder="Pilih PM" onChange={(e) => setPm(e)}>
+                    <Option key="false" value={false}>
+                      TIDAK
+                    </Option>
+                    <Option key="true" value={true}>
+                      YA
+                    </Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
 
             {
               //detail
@@ -549,50 +565,52 @@ const RABForm = (props) => {
               // "pm",
             }
           </Row>
-          <Row gutter={16}>
-            <Col span={4}>
-              <Form.Item
-                //name="ahsUtamaProjectId"
-                label="AHS Utama Project ID"
-                rules={[
-                  {
-                    required: true,
-                    message: "Pilihan harus terisi",
-                  },
-                ]}
-                initialValue={false}
-              >
-                <Select
-                  showSearch
-                  style={{ width: 600 }}
-                  placeholder="Select a person"
-                  optionFilterProp="children"
-                  onChange={onChange}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onSearch={onSearch}
-                  filterOption={(input, option) =>
-                    data.length > 0
-                      ? option.alias
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      : ""
-                  }
+          {detail && (
+            <Row gutter={16}>
+              <Col span={4}>
+                <Form.Item
+                  //name="ahsUtamaProjectId"
+                  label="AHS Utama Project ID"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Pilihan harus terisi",
+                    },
+                  ]}
+                  initialValue={false}
                 >
-                  {data.length > 0 &&
-                    data.map((item) => (
-                      <Option
-                        value={item.id}
-                        key={item.id}
-                        alias={item.nameBaru}
-                      >
-                        <div>{item.nameBaru}</div>
-                      </Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+                  <Select
+                    showSearch
+                    style={{ width: 600 }}
+                    placeholder="Select a person"
+                    optionFilterProp="children"
+                    onChange={onChange}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onSearch={onSearch}
+                    filterOption={(input, option) =>
+                      data.length > 0
+                        ? option.alias
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        : ""
+                    }
+                  >
+                    {data.length > 0 &&
+                      data.map((item) => (
+                        <Option
+                          value={item.id}
+                          key={item.id}
+                          alias={item.nameBaru}
+                        >
+                          <div>{item.nameBaru}</div>
+                        </Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
         </Form>
       </Drawer>
     </div>

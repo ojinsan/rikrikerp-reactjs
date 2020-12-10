@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Table, Input, InputNumber, Popconfirm, Form, Tooltip } from "antd";
+import {
+  Table,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Tooltip,
+  Space,
+  Button,
+} from "antd";
+import Highlighter from "react-highlight-words";
+import { SearchOutlined } from "@ant-design/icons";
 import { PlusCircleTwoTone, MinusCircleTwoTone } from "@ant-design/icons";
 import { globalVariable } from "../../utils/global-variable";
-const hostname = globalVariable("backendAddress");
+import AHSSumberLookup from "../AHS-Sumber-Lookup/AHSSumberLookup";
 
 const EditableCell = ({
   editing,
@@ -25,7 +36,7 @@ const EditableCell = ({
   ) {
     required = false;
   }
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+  var inputNode = inputType === "number" ? <InputNumber /> : <Input />;
   return (
     <td {...restProps}>
       {editing ? (
@@ -50,12 +61,329 @@ const EditableCell = ({
   );
 };
 
-const AHSProjectTable = () => {
+// ======================= MARK: Component =======================
+const AHSProjectTable = (props) => {
   const [form] = Form.useForm();
-  const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState("");
-
   const isEditing = (record) => record.key === editingKey;
+
+  const [AHSPUtamaId, setAHSPUtamaId] = useState(null);
+
+  const [sortedInfo, setSortedInfo] = useState(null);
+  const [filteredInfo, setFilteredInfo] = useState(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+
+  const [showAHSSumberLookup, setShowAHSSumberLookup] = useState(false);
+  const [idAHSSumberUtama, setIdAHSSumberUtama] = useState(0);
+
+  var searchInput = "";
+
+  const [data, setData] = useState([]);
+
+  // MARK: Filter Set Up
+  const getColumnSearchProps = (dataIndex) => {
+    const getDescendantValues = (record) => {
+      const values = [];
+      console.log(record);
+
+      (function recurse(record) {
+        console.log(record);
+        values.push(record[dataIndex].toString().toLowerCase());
+        record.hasOwnProperty("children") && record.children.forEach(recurse);
+      })(record);
+
+      return values;
+    };
+
+    return {
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={(node) => {
+              searchInput = node;
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{
+              width: 188,
+              marginBottom: 8,
+              display: "block",
+            }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() => handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+      ),
+      onFilter: (value, record) => {
+        const recordName = record[dataIndex] || record.children[dataIndex];
+        const searchLower = value.toLowerCase();
+        return (
+          recordName.toString().toLowerCase().includes(searchLower) ||
+          getDescendantValues(record).some((descValue) =>
+            descValue.includes(searchLower)
+          )
+        );
+      },
+      onFilterDropdownVisibleChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.select(), 100);
+        }
+      },
+      getDescendantValues: (record) => {
+        const values = [];
+        (function recurse(record) {
+          values.push(record[dataIndex].toString().toLowerCase());
+          record.children.forEach(recurse);
+        })(record);
+        return values;
+      },
+      render: (text) =>
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{
+              backgroundColor: "#ffc069",
+              padding: 0,
+            }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ""}
+          />
+        ) : (
+          text
+        ),
+    };
+  };
+
+  // MARK: Column Set Up
+  const columns = [
+    {
+      title: "No Urut",
+      dataIndex: "noUrut",
+      width: 48,
+      editable: true,
+      required: false,
+    },
+    {
+      title: "No AHS",
+      dataIndex: "noAHS",
+      width: 70,
+      editable: true,
+      required: false,
+    },
+    {
+      title: "Sumber",
+      dataIndex: "sumber",
+      width: "15%",
+      editable: true,
+      required: false,
+      sorter: {
+        compare: (a, b) => a.name.localeCompare(b.name),
+      },
+      ...getColumnSearchProps("sumber"),
+    },
+    {
+      title: "Nama AHS / Nama Uraian Editan",
+      dataIndex: "nameBaru",
+      width: "40%",
+      editable: true,
+      required: true,
+      sorter: {
+        compare: (a, b) => a.nameBaru.localeCompare(b.nameBaru),
+      },
+      ...getColumnSearchProps("nameBaru"),
+      render: (_, record) => (
+        <Tooltip placement="topLeft" title={record.nameOri}>
+          {/* {"[]"} */}
+          <div
+            onClick={() => {
+              setIdAHSSumberUtama(record.id);
+              setShowAHSSumberLookup(true);
+            }}
+          >
+            {record.nameBaru}
+          </div>
+        </Tooltip>
+      ),
+    },
+    // {
+    //   title: "Nama AHS / Nama Uraian Original",
+    //   dataIndex: "nameOri",
+    //   width: "40%",
+    //   editable: true,
+    //   required: true,
+    //   sorter: {
+    //     compare: (a, b) => a.nameOri.localeCompare(b.nameOri),
+    //   },
+    //   ...getColumnSearchProps("nameOri"),
+    // },
+    {
+      title: "Kelompok",
+      dataIndex: "kelompok",
+      width: 120,
+      editable: true,
+      required: true,
+      sorter: {
+        compare: (a, b) => a.name.localeCompare(b.name),
+      },
+      ...getColumnSearchProps("kelompok"),
+    },
+    {
+      title: "Satuan",
+      dataIndex: "satuan",
+      width: 65,
+      editable: true,
+      required: false,
+      sorter: {
+        compare: (a, b) => a.name.localeCompare(b.name),
+      },
+      ...getColumnSearchProps("satuan"),
+    },
+    {
+      title: "Koef",
+      dataIndex: "koefisien",
+      width: 65,
+      editable: true,
+      required: false,
+    },
+    {
+      title: "Harga Satuan",
+      dataIndex: "HS",
+      width: 65,
+      editable: true,
+      required: false,
+    },
+    {
+      title: "Keterangan",
+      dataIndex: "keterangan",
+      width: 150,
+      editable: true,
+      required: false,
+      ellipsis: {
+        showTitle: true,
+      },
+      render: (keterangan) => (
+        <Tooltip placement="topLeft" title={keterangan}>
+          {keterangan}
+        </Tooltip>
+      ),
+    },
+    {
+      title: " ",
+      dataIndex: "gambar",
+      width: 30,
+      editable: false,
+      required: false,
+      ellipsis: {
+        showTitle: true,
+      },
+      render: (gambar, record) =>
+        gambar !== undefined && (
+          <Tooltip placement="topLeft" title={<img src={gambar} />}>
+            {/* {"[]"} */}
+            {record.name}
+          </Tooltip>
+        ),
+    },
+    {
+      title: "operation",
+      width: 120,
+      dataIndex: "operation",
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <a
+              //href="javascript:;"
+              onClick={() => save(record.key)}
+              style={{
+                marginRight: 8,
+              }}
+            >
+              Save
+            </a>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>Cancel</a>
+            </Popconfirm>
+          </span>
+        ) : data.length >= 1 ? (
+          <div>
+            <a disabled={editingKey !== ""} onClick={() => edit(record)}>
+              Edit
+            </a>
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => handleDelete(record.key)}
+            >
+              <a> Delete </a>
+            </Popconfirm>
+          </div>
+        ) : null;
+      },
+    },
+    {
+      title: " ",
+      dataIndex: "khusus",
+      width: 35,
+    },
+  ];
+
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        inputType: col.dataIndex === "koefisien" ? "number" : "text",
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
+  // MARK: Default Action Setup
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
 
   const edit = (record) => {
     form.setFieldsValue({
@@ -232,237 +560,112 @@ const AHSProjectTable = () => {
     }
   };
 
-  const columns = [
-    {
-      title: "No Urut",
-      dataIndex: "noUrut",
-      width: 48,
-      editable: true,
-      required: false,
-    },
-    {
-      title: "No AHS",
-      dataIndex: "noAHS",
-      width: 70,
-      editable: true,
-      required: false,
-    },
-    {
-      title: "Sumber",
-      dataIndex: "sumber",
-      width: 100,
-      editable: true,
-      required: false,
-    },
-    {
-      title: "Nama AHS / Nama Uraian Editan",
-      dataIndex: "nameBaru",
-      width: "40%",
-      editable: true,
-      required: true,
-    },
-    {
-      title: "Nama AHS / Nama Uraian Original",
-      dataIndex: "nameOri",
-      width: "40%",
-      editable: true,
-      required: true,
-    },
-    {
-      title: "Kelompok",
-      dataIndex: "kelompok",
-      width: 80,
-      editable: true,
-      required: true,
-    },
-    {
-      title: "Satuan",
-      dataIndex: "satuan",
-      width: 65,
-      editable: true,
-      required: false,
-    },
-    {
-      title: "Koef",
-      dataIndex: "koefisien",
-      width: 65,
-      editable: true,
-      required: false,
-    },
-    {
-      title: "Harga Satuan",
-      dataIndex: "HS",
-      width: 65,
-      editable: true,
-      required: false,
-    },
-    {
-      title: "Keterangan",
-      dataIndex: "keterangan",
-      width: 150,
-      editable: true,
-      required: false,
-      ellipsis: {
-        showTitle: true,
-      },
-      render: (keterangan) => (
-        <Tooltip placement="topLeft" title={keterangan}>
-          {keterangan}
-        </Tooltip>
-      ),
-    },
-    {
-      title: " ",
-      dataIndex: "gambar",
-      width: 30,
-      editable: false,
-      required: false,
-      ellipsis: {
-        showTitle: true,
-      },
-      render: (gambar, record) =>
-        gambar !== undefined && (
-          <Tooltip placement="topLeft" title={<img src={gambar} />}>
-            {/* {"[]"} */}
-            {record.name}
-          </Tooltip>
-        ),
-    },
-    {
-      title: "operation",
-      width: 120,
-      dataIndex: "operation",
-      render: (_, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <a
-              //href="javascript:;"
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              Save
-            </a>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : data.length >= 1 ? (
-          <div>
-            <a disabled={editingKey !== ""} onClick={() => edit(record)}>
-              Edit
-            </a>
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => handleDelete(record.key)}
-            >
-              <a> Delete </a>
-            </Popconfirm>
-          </div>
-        ) : null;
-      },
-    },
-    {
-      title: " ",
-      dataIndex: "khusus",
-      width: 35,
-    },
-  ];
+  // const mergedColumns = columns.map((col) => {
+  //   if (!col.editable) {
+  //     return col;
+  //   }
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
+  //   return {
+  //     ...col,
+  //     onCell: (record) => ({
+  //       record,
+  //       inputType: col.dataIndex === "koefisien" ? "number" : "text",
+  //       dataIndex: col.dataIndex,
+  //       title: col.title,
+  //       editing: isEditing(record),
+  //     }),
+  //   };
+  // });
 
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        inputType: col.dataIndex === "koefisien" ? "number" : "text",
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
+  //   useEffect(() => {
+  //     fetch(hostname + "/project/get-ahs-project-full-data?TAHUN=" + "2020", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //     })
+  //       .then((response) => response.json())
+  //       .then((response) => {
+  //         console.log(response);
+  //         var tableData = response.AHS_PROJECT_UTAMA.map((ahs, idx) => {
+  //           const data = {
+  //             noUrut: ahs.NO_URUT,
+  //             id: ahs.ID_AHS_PROJECT_UTAMA,
+  //             isAHS: true,
+  //             key: idx.toString(),
+  //             nameBaru: ahs.NAMA_AHS_PROJECT,
+  //             nameOri: ahs.AHS_SUMBER_UTAMA.NAMA_AHS,
+  //             noAHS: ahs.NOMOR_AHS_PROJECT,
+  //             kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
+  //             satuan: ahs.AHS_SUMBER_UTAMA.SATUAN_AHS,
+  //             sumber: ahs.AHS_SUMBER_UTAMA.SUMBER_AHS,
+  //             koefisien: ahs.KOEFISIEN_AHS,
+  //             keterangan: ahs.PENJELASAN_KOEFISIEN_AHS,
 
-  useEffect(() => {
-    fetch(hostname + "/project/get-ahs-project-full-data?TAHUN=" + "2020", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        var tableData = response.AHS_PROJECT_UTAMA.map((ahs, idx) => {
-          const data = {
-            noUrut: ahs.NO_URUT,
-            id: ahs.ID_AHS_PROJECT_UTAMA,
-            isAHS: true,
-            key: idx.toString(),
-            nameBaru: ahs.NAMA_AHS_PROJECT,
-            nameOri: ahs.AHS_SUMBER_UTAMA.NAMA_AHS,
-            noAHS: ahs.NOMOR_AHS_PROJECT,
-            kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
-            satuan: ahs.AHS_SUMBER_UTAMA.SATUAN_AHS,
-            sumber: ahs.AHS_SUMBER_UTAMA.SUMBER_AHS,
-            koefisien: ahs.KOEFISIEN_AHS,
-            keterangan: ahs.PENJELASAN_KOEFISIEN_AHS,
-
-            children: ahs.AHS_PROJECT_DETAIL.map((ahsd, i) => {
-              return {
-                key: idx.toString() + "-" + i.toString(),
-                id: ahsd.ID_AHS_PROJECT_DETAIL,
-                isAHS: false,
-                name: ahsd.P_URAIAN,
-                kodeUraian: ahsd.KODE_URAIAN,
-                //noAHS: ahsd.ID_AHS_SUMBER_UTAMA,
-                kelompok: ahsd.P_KELOMPOK_URAIAN,
-                satuan: ahsd.P_SATUAN_URAIAN,
-                koefisien: ahsd.P_KOEFISIEN_URAIAN,
-                keterangan: ahsd.P_KETERANGAN_URAIAN,
-                HS: ahsd.hs ? ahsd.HS.HARGA : 0,
-              };
-            }),
-          };
-          if (data.children.length == 0) {
-            delete data.children;
-          }
-          return data;
-        });
-        return tableData;
-      })
-      .then((tableData) => {
-        setData(tableData);
-      });
-  }, []);
+  //             children: ahs.AHS_PROJECT_DETAIL.map((ahsd, i) => {
+  //               return {
+  //                 key: idx.toString() + "-" + i.toString(),
+  //                 id: ahsd.ID_AHS_PROJECT_DETAIL,
+  //                 isAHS: false,
+  //                 name: ahsd.P_URAIAN,
+  //                 kodeUraian: ahsd.KODE_URAIAN,
+  //                 //noAHS: ahsd.ID_AHS_SUMBER_UTAMA,
+  //                 kelompok: ahsd.P_KELOMPOK_URAIAN,
+  //                 satuan: ahsd.P_SATUAN_URAIAN,
+  //                 koefisien: ahsd.P_KOEFISIEN_URAIAN,
+  //                 keterangan: ahsd.P_KETERANGAN_URAIAN,
+  //                 HS: ahsd.hs ? ahsd.HS.HARGA : 0,
+  //               };
+  //             }),
+  //           };
+  //           if (data.children.length == 0) {
+  //             delete data.children;
+  //           }
+  //           return data;
+  //         });
+  //         return tableData;
+  //       })
+  //       .then((tableData) => {
+  //         setData(tableData);
+  //       });
+  //   }, []);
 
   return (
-    <Form form={form} component={false}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        rowClassName={(record) => record.color.replace("#", "")}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-        expandable={{
-          expandIconColumnIndex: columns.length - 1,
-        }}
-        size="small"
-      />
-    </Form>
+    <>
+      <Form form={form} component={false}>
+        <Table
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          rowClassName={(record) => record.color.replace("#", "")}
+          bordered
+          dataSource={props.AHSPs.data}
+          columns={mergedColumns}
+          rowClassName="editable-row"
+          pagination={{
+            onChange: cancel,
+          }}
+          expandable={{
+            expandIconColumnIndex: columns.length - 1,
+          }}
+          size="small"
+        />
+      </Form>
+      {showAHSSumberLookup && (
+        <AHSSumberLookup
+          showDrawer={() => {
+            setShowAHSSumberLookup(true);
+          }}
+          onClose={() => {
+            setShowAHSSumberLookup(false);
+          }}
+          visible={showAHSSumberLookup}
+          ID_AHS_SUMBER_UTAMA={idAHSSumberUtama}
+        />
+      )}
+    </>
   );
 };
 

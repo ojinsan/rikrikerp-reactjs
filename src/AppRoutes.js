@@ -21,11 +21,7 @@ class AppRoutes extends Component {
           <Route exact path="/wilayah" component={Wilayah} />
           <Route exact path="/ahs-sumber" component={AHSSumber} />
           <Route exact path="/hs" component={HS} />
-          <Route
-            exact
-            path="/project/ahs-project/:tahun/:projectid"
-            component={AHSProject}
-          />
+          <Route exact path="/project/ahs-project" component={AHSProject} />
           <Route
             exact
             path="/project/rab/:tahun/:rabprojectbagianid"

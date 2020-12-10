@@ -133,14 +133,14 @@ const RAB = () => {
                 noUrut3: RAB.NO_URUT_3,
                 noUrut4: RAB.NO_URUT_4,
                 noUrut5: RAB.NO_URUT_5,
-                detail: RAB.DETAIL,
+                detail: RAB.DETAIL ? "yes" : "no",
 
                 idRabDetail: RAB.RAB_DETAILS[0].ID_RAB_DETAIL,
                 satuan: RAB.RAB_DETAILS[0].SATUAN,
                 volume: RAB.RAB_DETAILS[0].VOLUME,
-                upahNonTdp: RAB.RAB_DETAILS[0].UPAH_NON_TDP,
-                bahanNonTdp: RAB.RAB_DETAILS[0].BAHAN_NON_TDP,
-                pm: RAB.RAB_DETAILS[0].PM,
+                upahNonTdp: RAB.RAB_DETAILS[0].UPAH_NON_TDP ? "yes" : "no",
+                bahanNonTdp: RAB.RAB_DETAILS[0].BAHAN_NON_TDP ? "yes" : "no",
+                pm: RAB.RAB_DETAILS[0].PM ? "yes" : "no",
                 idRabJudul: RAB.RAB_DETAILS[0].ID_RAB_JUDUL,
                 idAHSProjectUtama: RAB.RAB_DETAILS[0].ID_AHS_PROJECT_UTAMA,
 
