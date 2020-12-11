@@ -40,6 +40,7 @@ const AHSSumberLookup = (props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [AHSUtama, setAHSUtama] = useState({});
   var searchInput = "";
 
   // MARK: Filter Set Up
@@ -152,17 +153,17 @@ const AHSSumberLookup = (props) => {
       editable: true,
       required: false,
     },
-    {
-      title: "Sumber",
-      dataIndex: "sumber",
-      width: "15%",
-      editable: true,
-      required: false,
-      sorter: {
-        compare: (a, b) => a.name.localeCompare(b.name),
-      },
-      ...getColumnSearchProps("sumber"),
-    },
+    // {
+    //   title: "Sumber",
+    //   dataIndex: "sumber",
+    //   width: "15%",
+    //   editable: true,
+    //   required: false,
+    //   sorter: {
+    //     compare: (a, b) => a.name.localeCompare(b.name),
+    //   },
+    //   ...getColumnSearchProps("sumber"),
+    // },
     {
       title: "Nama AHS / Nama Uraian",
       dataIndex: "name",
@@ -239,11 +240,11 @@ const AHSSumberLookup = (props) => {
           </Tooltip>
         ),
     },
-    {
-      title: " ",
-      dataIndex: "khusus",
-      width: 35,
-    },
+    // {
+    //   title: " ",
+    //   dataIndex: "khusus",
+    //   width: 35,
+    // },
   ];
 
   // MARK: Default Action Setup
@@ -292,6 +293,15 @@ const AHSSumberLookup = (props) => {
             };
           }
         );
+        setAHSUtama({
+          id: response.AHS_SUMBER_UTAMA.ID_AHS_SUMBER_UTAMA,
+          isAHS: true,
+          name: response.AHS_SUMBER_UTAMA.NAMA_AHS,
+          noAHS: response.AHS_SUMBER_UTAMA.NOMOR_AHS,
+          kelompok: response.AHS_SUMBER_UTAMA.KHUSUS ? "Khusus" : "Non-Khusus",
+          satuan: response.AHS_SUMBER_UTAMA.SATUAN_AHS,
+          sumber: response.AHS_SUMBER_UTAMA.SUMBER_AHS,
+        });
         setTableData(newSetTableData);
       })
     );
@@ -332,6 +342,11 @@ const AHSSumberLookup = (props) => {
           </div>
         }
       >
+        <div>Nama AHS: {AHSUtama.name}</div>
+        <div>No AHS: {AHSUtama.noAHS}</div>
+        <div>Kelompok: {AHSUtama.kelompok}</div>
+        <div>Satuan: {AHSUtama.satuan}</div>
+        <div>Sumber: {AHSUtama.sumber}</div>
         <Table
           //   components={{
           //     body: {

@@ -135,14 +135,26 @@ const RAB = () => {
                 noUrut5: RAB.NO_URUT_5,
                 detail: RAB.DETAIL ? "yes" : "no",
 
-                idRabDetail: RAB.RAB_DETAILS[0].ID_RAB_DETAIL,
-                satuan: RAB.RAB_DETAILS[0].SATUAN,
-                volume: RAB.RAB_DETAILS[0].VOLUME,
-                upahNonTdp: RAB.RAB_DETAILS[0].UPAH_NON_TDP ? "yes" : "no",
-                bahanNonTdp: RAB.RAB_DETAILS[0].BAHAN_NON_TDP ? "yes" : "no",
-                pm: RAB.RAB_DETAILS[0].PM ? "yes" : "no",
-                idRabJudul: RAB.RAB_DETAILS[0].ID_RAB_JUDUL,
-                idAHSProjectUtama: RAB.RAB_DETAILS[0].ID_AHS_PROJECT_UTAMA,
+                idRabDetail: RAB.DETAIL
+                  ? RAB.RAB_DETAILS[0].ID_RAB_DETAIL
+                  : null,
+                satuan: RAB.DETAIL ? RAB.RAB_DETAILS[0].SATUAN : null,
+                volume: RAB.DETAIL ? RAB.RAB_DETAILS[0].VOLUME : null,
+                upahNonTdp: RAB.DETAIL
+                  ? RAB.RAB_DETAILS[0].UPAH_NON_TDP
+                    ? "yes"
+                    : "no"
+                  : null,
+                bahanNonTdp: RAB.DETAIL
+                  ? RAB.RAB_DETAILS[0].BAHAN_NON_TDP
+                    ? "yes"
+                    : "no"
+                  : null,
+                pm: RAB.DETAIL ? (RAB.RAB_DETAILS[0].PM ? "yes" : "no") : null,
+                idRabJudul: RAB.DETAIL ? RAB.RAB_DETAILS[0].ID_RAB_JUDUL : null,
+                idAHSProjectUtama: RAB.DETAIL
+                  ? RAB.RAB_DETAILS[0].ID_AHS_PROJECT_UTAMA
+                  : null,
 
                 key: j.toString(),
                 // ID_WILAYAH
