@@ -16,6 +16,7 @@ import { globalVariable } from "../../utils/global-variable";
 
 // IMPORT: Other Components
 import { LoadingSpinner } from "../../components";
+import { useParams } from "react-router-dom";
 
 const hostname = globalVariable("backendAddress");
 
@@ -102,6 +103,7 @@ const AHSProjectForm = (props) => {
     },
   ];
 
+  let { tahun, projectid } = useParams();
   const [data, setData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -171,8 +173,8 @@ const AHSProjectForm = (props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            idproject: 1,
-            tahun: 2020,
+            idproject: projectid,
+            tahun: tahun,
             AHSProjects: submitedData,
           }),
         }
@@ -181,6 +183,15 @@ const AHSProjectForm = (props) => {
         const responseBody = await response.json();
         console.log(responseBody);
         props.onClose();
+        props.dispatch({
+          type: "ACTION_SELECTED",
+          payload: {
+            option: "FETCH",
+            index: -1,
+            newData: {},
+            row: {},
+          },
+        });
       } else {
         throw new Error(
           "Gagal menyimpan dalam database. Status:" + response.status

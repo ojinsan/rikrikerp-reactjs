@@ -3,12 +3,13 @@ import AHSSumberForm from "./AHS-Sumber-Form/AHSSumberForm";
 import AHSSumberTableOld from "./AHS-Sumber-Table/AHSSumberTableOld";
 import AHSSumberTable from "./AHS-Sumber-Table/AHSSumberTable";
 import AHSSumberDetailForm from "./AHS-Sumber-Detail-Form/AHSSumberDetailForm";
-//import AHSSumberLookup from "./AHS-Sumber-Lookup/AHSSumberLookup";
+import AHSSumberLookup from "./AHS-Sumber-Lookup/AHSSumberLookup";
 
 import HSForm from "./HS-Form/HSForm";
 import HSTable from "./HS-Table/HSTable";
 import HSWilayahTahunSelector from "./HS-Wilayah-Tahun-Selector/HSWilayahTahunSelector";
 import HSSort from "./HS-Sort/HSSort";
+import HSSelection from "./HS-Selection/HSSelection";
 
 import AHSProjectForm from "./AHS-Project-Form/AHSProjectForm";
 import AHSProjectTable from "./AHS-Project-Table/AHSProjectTable";
@@ -29,10 +30,12 @@ export {
   AHSSumberTableOld,
   AHSSumberTable,
   AHSSumberDetailForm,
+  AHSSumberLookup,
   HSForm,
   HSTable,
   HSSort,
   HSWilayahTahunSelector,
+  HSSelection,
   AHSProjectForm,
   AHSProjectTable,
   ProjectForm,

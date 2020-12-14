@@ -175,6 +175,7 @@ const RABForm = (props) => {
 
   const onSubmit = () => {
     console.log(props.RABPB_ID);
+    console.log(ahsUtamaProjectId);
     const project = {
       ITEM_PEKERJAAN: itemPekerjaan,
       NO_URUT_1: noUrut1,
@@ -183,7 +184,7 @@ const RABForm = (props) => {
       NO_URUT_4: noUrut4,
       NO_URUT_5: noUrut5,
       DETAIL: detail,
-      AHS_UTAMA_PROJECT_ID: ahsUtamaProjectId,
+      ID_AHS_PROJECT_UTAMA: ahsUtamaProjectId,
       SATUAN: satuan,
       VOLUME: volume,
       UPAH_NON_TDP: upahNonTdp,

@@ -11,7 +11,7 @@ import {
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 const EditableCell = ({
   editing,
@@ -68,6 +68,7 @@ const RABProjectBagianTable = (props) => {
   const [searchedColumn, setSearchedColumn] = useState("");
   let history = useHistory();
   var searchInput = "";
+  let { projectid, tahun } = useParams();
 
   // MARK: Filter Set Up
   const getColumnSearchProps = (dataIndex) => ({
@@ -165,7 +166,12 @@ const RABProjectBagianTable = (props) => {
           <div
             onClick={() => {
               history.push(
-                "/project/rab/" + props.tahun + "/" + record.idRABPB
+                "/project/" +
+                  props.tahun +
+                  "/" +
+                  projectid +
+                  "/" +
+                  record.idRABPB
               );
             }}
           >

@@ -305,7 +305,7 @@ const AHSSumberLookup = (props) => {
         setTableData(newSetTableData);
       })
     );
-  });
+  }, []);
 
   return (
     <>

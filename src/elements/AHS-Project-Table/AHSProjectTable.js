@@ -13,7 +13,9 @@ import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { PlusCircleTwoTone, MinusCircleTwoTone } from "@ant-design/icons";
 import { globalVariable } from "../../utils/global-variable";
-import AHSSumberLookup from "../AHS-Sumber-Lookup/AHSSumberLookup";
+// import AHSSumberLookup from "../AHS-Sumber-Lookup/AHSSumberLookup";
+import { AHSSumberLookup } from "../../elements";
+import { HSSelection } from "../../elements";
 
 const EditableCell = ({
   editing,
@@ -76,6 +78,9 @@ const AHSProjectTable = (props) => {
 
   const [showAHSSumberLookup, setShowAHSSumberLookup] = useState(false);
   const [idAHSSumberUtama, setIdAHSSumberUtama] = useState(0);
+
+  const [showHSSelection, setShowHSSelection] = useState(false);
+  const [selectedAHSProjectId, setSelectedAHSProjectId] = useState(0);
 
   var searchInput = "";
 
@@ -280,6 +285,19 @@ const AHSProjectTable = (props) => {
       width: 65,
       editable: true,
       required: false,
+      render: (_, record) => (
+        <Tooltip placement="topLeft" title={record.nameOri}>
+          {/* {"[]"} */}
+          <div
+            onClick={() => {
+              setSelectedAHSProjectId(record.id);
+              setShowHSSelection(true);
+            }}
+          >
+            {record.HS}
+          </div>
+        </Tooltip>
+      ),
     },
     {
       title: "Keterangan",
@@ -663,6 +681,19 @@ const AHSProjectTable = (props) => {
           }}
           visible={showAHSSumberLookup}
           ID_AHS_SUMBER_UTAMA={idAHSSumberUtama}
+        />
+      )}
+      {showHSSelection && (
+        <HSSelection
+          showDrawer={() => {
+            setShowHSSelection(true);
+          }}
+          onClose={() => {
+            setShowHSSelection(false);
+          }}
+          visible={showHSSelection}
+          ID_AHS_PROJECT={selectedAHSProjectId}
+          TAHUN={props.tahun}
         />
       )}
     </>

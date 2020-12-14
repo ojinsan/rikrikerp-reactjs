@@ -12,6 +12,8 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
+import { useParams } from "react-router-dom";
+
 // IMPORT: Components
 import {
   HSTable,
@@ -97,7 +99,8 @@ function dataReducer(state, action) {
 const AHSProject = (props) => {
   const [showAHSProjectForm, setShowAHSProjectForm] = useState(false);
   const [wilayahProject, setWilayahProject] = useState(null);
-  const [tahun, setTahun] = useState(null);
+  let { tahun, projectid } = useParams();
+  // const [tahun, setTahun] = useState(null);
   const [AHSPs, dispatch] = useReducer(dataReducer, {
     loading: false,
     selectedOption: "FETCH",
@@ -152,7 +155,7 @@ const AHSProject = (props) => {
                   satuan: ahsd.P_SATUAN_URAIAN,
                   koefisien: ahsd.P_KOEFISIEN_URAIAN,
                   keterangan: ahsd.P_KETERANGAN_URAIAN,
-                  HS: ahsd.hs ? ahsd.HS.HARGA : 0,
+                  HS: ahsd.HS ? ahsd.HS.HARGA : 0,
                 };
               }),
             };
@@ -307,7 +310,7 @@ const AHSProject = (props) => {
 
       {/* <AHSProjectTable /> */}
 
-      <HSWilayahTahunSelector
+      {/* <HSWilayahTahunSelector
         onWilayahChangeValue={(value) => {
           setWilayahProject(value);
           dispatch({
@@ -333,7 +336,7 @@ const AHSProject = (props) => {
           });
         }}
         dispatch={dispatch}
-      />
+      /> */}
 
       <AHSProjectForm
         showDrawer={() => {
@@ -343,6 +346,7 @@ const AHSProject = (props) => {
           setShowAHSProjectForm(false);
         }}
         visible={showAHSProjectForm}
+        dispatch={dispatch}
       />
 
       <AHSProjectTable dispatch={dispatch} AHSPs={AHSPs} tahun={tahun} />

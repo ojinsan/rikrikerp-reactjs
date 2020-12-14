@@ -120,6 +120,7 @@ const RAB = () => {
       )
         .then((response) => response.json())
         .then((response) => {
+          console.log(response);
           var j = 0;
           var tableData = [];
           response.rab &&

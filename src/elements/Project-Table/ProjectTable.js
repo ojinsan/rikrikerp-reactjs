@@ -167,12 +167,7 @@ const ProjectTable = (props) => {
         return (
           <div
             onClick={() => {
-              history.push(
-                "/project/rab-project-bagian/" +
-                  props.tahun +
-                  "/" +
-                  record.idProject
-              );
+              history.push("/project/" + props.tahun + "/" + record.idProject);
             }}
           >
             {record.namaProject}
@@ -239,6 +234,15 @@ const ProjectTable = (props) => {
             >
               <a> Delete </a>
             </Popconfirm>
+            <a
+              onClick={() => {
+                history.push(
+                  "/ahsproject/" + props.tahun + "/" + record.idProject
+                );
+              }}
+            >
+              OpenAHS
+            </a>
           </div>
         );
       },

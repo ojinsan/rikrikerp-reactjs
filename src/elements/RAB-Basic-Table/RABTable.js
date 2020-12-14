@@ -11,6 +11,8 @@ import {
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+import { HSSelection } from "../../elements";
+import { useHistory, useParams } from "react-router-dom";
 
 const EditableCell = ({
   editing,
@@ -66,6 +68,8 @@ const RABTable = (props) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   var searchInput = "";
+  let { projectid, tahun, rabprojectbagianid } = useParams();
+  const history = useHistory();
 
   // MARK: Filter Set Up
   const getColumnSearchProps = (dataIndex) => ({
@@ -192,7 +196,7 @@ const RABTable = (props) => {
         return (
           <div
             onClick={() => {
-              console.log("open drawer");
+              history.push("/ahsproject/" + tahun + "/" + projectid);
             }}
           >
             {record.itemPekerjaan}
