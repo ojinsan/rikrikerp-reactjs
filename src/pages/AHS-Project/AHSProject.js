@@ -148,7 +148,7 @@ const AHSProject = (props) => {
                   key: idx.toString() + "-" + i.toString(),
                   id: ahsd.ID_AHS_PROJECT_DETAIL,
                   isAHS: false,
-                  name: ahsd.P_URAIAN,
+                  nameBaru: ahsd.P_URAIAN,
                   kodeUraian: ahsd.KODE_URAIAN,
                   //noAHS: ahsd.ID_AHS_SUMBER_UTAMA,
                   kelompok: ahsd.P_KELOMPOK_URAIAN,
