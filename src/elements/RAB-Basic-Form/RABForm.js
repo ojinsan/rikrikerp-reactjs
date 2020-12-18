@@ -66,11 +66,11 @@ const RABForm = (props) => {
 
   //const [idRabProjectBagian, setIdRabProjectBagian] = useState("")
   const [itemPekerjaan, setItemPekerjaan] = useState("");
-  const [noUrut1, setNoUrut1] = useState("");
-  const [noUrut2, setNoUrut2] = useState("");
-  const [noUrut3, setNoUrut3] = useState("");
-  const [noUrut4, setNoUrut4] = useState("");
-  const [noUrut5, setNoUrut5] = useState("");
+  const [noUrut1, setNoUrut1] = useState(1);
+  const [noUrut2, setNoUrut2] = useState(0);
+  const [noUrut3, setNoUrut3] = useState(0);
+  const [noUrut4, setNoUrut4] = useState(0);
+  const [noUrut5, setNoUrut5] = useState(0);
   const [detail, setDetail] = useState("");
   const [ahsUtamaProjectId, setAhsUtamaProjectId] = useState("");
   const [satuan, setSatuan] = useState("");
@@ -182,7 +182,7 @@ const RABForm = (props) => {
       NO_URUT_2: noUrut2,
       NO_URUT_3: noUrut3,
       NO_URUT_4: noUrut4,
-      NO_URUT_5: noUrut5,
+      NO_URUT_5: 0,
       DETAIL: detail,
       ID_AHS_PROJECT_UTAMA: ahsUtamaProjectId,
       SATUAN: satuan,
