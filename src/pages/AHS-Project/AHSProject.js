@@ -178,7 +178,7 @@ const AHSProject = (props) => {
     } else if (AHSPs.selectedOption == "DELETE") {
       if (AHSPs.selectedIndex instanceof Array) {
         if (AHSPs.selectedIndex[0] > -1 && AHSPs.selectedIndex[1] > -1) {
-          fetch(hostname + "/project/delete-ahs-project-detail", {
+          fetch(hostname + "/project/delete-ahs-project-utama", {
             //signal: controller.signal,
             method: "POST",
             headers: {
@@ -186,10 +186,7 @@ const AHSProject = (props) => {
             },
             body: JSON.stringify({
               TAHUN: tahun,
-              ID_AHS_PROJECT_DETAIL:
-                AHSPs.data[AHSPs.selectedIndex[0]].children[
-                  AHSPs.selectedIndex[1]
-                ].id,
+              ID_AHS_PROJECT_DETAIL: AHSPs.data[AHSPs.selectedIndex].id,
             }),
           }).then((response) => {
             if (response.ok) {

@@ -193,8 +193,14 @@ const AHSProjectForm = (props) => {
           },
         });
       } else {
+        const responseBody = await response.json();
         throw new Error(
-          "Gagal menyimpan dalam database. Status:" + response.status
+          "Gagal menyimpan dalam database. Status: " +
+            response.status +
+            " " +
+            responseBody.message +
+            " : " +
+            responseBody.HS.join(", ")
         );
       }
     } catch (err) {

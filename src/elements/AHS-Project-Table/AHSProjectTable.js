@@ -283,7 +283,7 @@ const AHSProjectTable = (props) => {
       title: "Harga Satuan",
       dataIndex: "HS",
       width: 65,
-      editable: true,
+      editable: false,
       required: false,
       render: (_, record) => (
         <Tooltip placement="topLeft" title={record.nameOri}>
@@ -352,7 +352,7 @@ const AHSProjectTable = (props) => {
               <a>Cancel</a>
             </Popconfirm>
           </span>
-        ) : data.length >= 1 ? (
+        ) : (
           <div>
             <a disabled={editingKey !== ""} onClick={() => edit(record)}>
               Edit
@@ -364,7 +364,7 @@ const AHSProjectTable = (props) => {
               <a> Delete </a>
             </Popconfirm>
           </div>
-        ) : null;
+        );
       },
     },
     {
@@ -422,50 +422,22 @@ const AHSProjectTable = (props) => {
   const handleDelete = (key) => {
     console.log(key);
     try {
-      const newData = [...data];
+      const newData = [...props.AHSPs.data];
       const keysTemp = key.split("-");
-      if (keysTemp.length == 2) {
-        var childIndex = null;
-        const index = newData.findIndex((item) => {
-          if (item.children !== undefined && item.children !== null) {
-            console.log(item);
-            childIndex = item.children.findIndex((child) => {
-              console.log(child);
-              return key === child.key;
-            });
-            if (childIndex === -1) {
-              return false;
-            } else {
-              return true;
-            }
-          } else {
-            // ga mungkin kesini harusnya
-            console.log("it's weird");
-            return key === item.key;
-          }
-        });
 
-        console.log(index);
-        console.log(childIndex);
-
-        if (index > -1) {
-          console.log("jol delete");
-          newData[index].children.splice(childIndex, 1);
-          setData(newData);
-        } else {
-          console.log("situ");
-        }
-      } else {
-        console.log("utama delete");
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-          console.log("ketemu");
-          newData.splice(index, 1);
-          setData(newData);
-        } else {
-          console.log("situ");
-        }
-      }
+      console.log("utama delete");
+      const index = newData.findIndex((item) => key === item.key);
+      console.log(
+        "try deleting record with key: " + key + " at index: " + index
+      );
+      props.dispatch({
+        type: "ACTION_SELECTED",
+        payload: {
+          option: "DELETE",
+          index: index,
+          newData: {},
+        },
+      });
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
