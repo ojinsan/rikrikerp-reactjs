@@ -241,7 +241,7 @@ const ProjectTable = (props) => {
                 );
               }}
             >
-              OpenAHS
+              (Open AHS Project)
             </a>
           </div>
         );
