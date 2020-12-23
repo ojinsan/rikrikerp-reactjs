@@ -71,8 +71,8 @@ const RABForm = (props) => {
   const [noUrut3, setNoUrut3] = useState(0);
   const [noUrut4, setNoUrut4] = useState(0);
   const [noUrut5, setNoUrut5] = useState(0);
-  const [detail, setDetail] = useState("");
-  const [ahsUtamaProjectId, setAhsUtamaProjectId] = useState("");
+  const [detail, setDetail] = useState(false);
+  const [ahsUtamaProjectId, setAhsUtamaProjectId] = useState(null);
   const [satuan, setSatuan] = useState("");
   const [volume, setVolume] = useState("");
   const [upahNonTdp, setUpahNonTdp] = useState(true);
@@ -102,13 +102,13 @@ const RABForm = (props) => {
 
   const resetForm = () => {
     setItemPekerjaan("");
-    setNoUrut1("");
-    setNoUrut2("");
-    setNoUrut3("");
-    setNoUrut4("");
-    setNoUrut5("");
-    setDetail("");
-    setAhsUtamaProjectId("");
+    setNoUrut1(0);
+    setNoUrut2(0);
+    setNoUrut3(0);
+    setNoUrut4(0);
+    setNoUrut5(0);
+    setDetail(false);
+    setAhsUtamaProjectId(null);
     setSatuan("");
     setVolume("");
     setUpahNonTdp(true);
