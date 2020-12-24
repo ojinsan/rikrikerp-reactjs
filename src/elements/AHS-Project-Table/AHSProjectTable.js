@@ -211,7 +211,7 @@ const AHSProjectTable = (props) => {
       editable: true,
       required: false,
       sorter: {
-        compare: (a, b) => a.name.localeCompare(b.name),
+        compare: (a, b) => a.sumber.localeCompare(b.sumber),
       },
       ...getColumnSearchProps("sumber"),
     },
@@ -257,7 +257,7 @@ const AHSProjectTable = (props) => {
       editable: true,
       required: true,
       sorter: {
-        compare: (a, b) => a.name.localeCompare(b.name),
+        compare: (a, b) => a.kelompok.localeCompare(b.kelompok),
       },
       ...getColumnSearchProps("kelompok"),
     },
@@ -268,7 +268,7 @@ const AHSProjectTable = (props) => {
       editable: true,
       required: false,
       sorter: {
-        compare: (a, b) => a.name.localeCompare(b.name),
+        compare: (a, b) => a.satuan.localeCompare(b.satuan),
       },
       ...getColumnSearchProps("satuan"),
     },
