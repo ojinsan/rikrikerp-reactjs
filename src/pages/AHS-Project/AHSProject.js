@@ -244,7 +244,8 @@ const AHSProject = (props) => {
     } else if (AHSPs.selectedOption == "UPDATE") {
       console.log(AHSPs.selectedIndex);
       if (AHSPs.selectedIndex > -1) {
-        fetch(hostname + "/data-source/update-hs", {
+        console.log(AHSPs.newData);
+        fetch(hostname + "/project/update-ahs-project-utama?TAHUN=" + tahun, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -9,6 +9,7 @@ import {
   Tooltip,
   Button,
   Drawer,
+  Space,
 } from "antd";
 
 // IMPORT: Utilities
@@ -18,17 +19,133 @@ import { globalVariable } from "../../utils/global-variable";
 import { LoadingSpinner } from "../../components";
 import { useParams } from "react-router-dom";
 
+import { SearchOutlined } from "@ant-design/icons";
+
+import Highlighter from "react-highlight-words";
+
 const hostname = globalVariable("backendAddress");
 
 const AHSProjectForm = (props) => {
+  let { tahun, projectid } = useParams();
+  const [data, setData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+
+  var searchInput = "";
+
+  // MARK: Filter Set Up
+  const getColumnSearchProps = (dataIndex) => {
+    const getDescendantValues = (record) => {
+      const values = [];
+      console.log(record);
+
+      (function recurse(record) {
+        console.log(record);
+        values.push(record[dataIndex].toString().toLowerCase());
+        record.hasOwnProperty("children") && record.children.forEach(recurse);
+      })(record);
+
+      return values;
+    };
+
+    return {
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={(node) => {
+              searchInput = node;
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{
+              width: 188,
+              marginBottom: 8,
+              display: "block",
+            }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() => handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+      ),
+      onFilter: (value, record) => {
+        const recordName = record[dataIndex] || record.children[dataIndex];
+        const searchLower = value.toLowerCase();
+        return (
+          recordName.toString().toLowerCase().includes(searchLower) ||
+          getDescendantValues(record).some((descValue) =>
+            descValue.includes(searchLower)
+          )
+        );
+      },
+      onFilterDropdownVisibleChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.select(), 100);
+        }
+      },
+      getDescendantValues: (record) => {
+        const values = [];
+        (function recurse(record) {
+          values.push(record[dataIndex].toString().toLowerCase());
+          record.children.forEach(recurse);
+        })(record);
+        return values;
+      },
+      render: (text) =>
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{
+              backgroundColor: "#ffc069",
+              padding: 0,
+            }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ""}
+          />
+        ) : (
+          text
+        ),
+    };
+  };
+
   const columns = [
-    {
-      title: "No AHS",
-      dataIndex: "noAHS",
-      width: 50,
-      editable: true,
-      required: false,
-    },
+    // {
+    //   title: "No AHS",
+    //   dataIndex: "noAHS",
+    //   width: 50,
+    //   editable: true,
+    //   required: false,
+    // },
     {
       title: "Sumber",
       dataIndex: "sumber",
@@ -42,6 +159,20 @@ const AHSProjectForm = (props) => {
       width: 120,
       editable: true,
       required: true,
+      sorter: {
+        compare: (a, b) => a.name.localeCompare(b.name),
+      },
+      ...getColumnSearchProps("name"),
+      render: (_, record) => (
+        <div
+          placement="topLeft"
+          onClick={() => {
+            console.log("see detail");
+          }}
+        >
+          {record.name}
+        </div>
+      ),
     },
     {
       title: "Kelompok",
@@ -49,6 +180,10 @@ const AHSProjectForm = (props) => {
       width: 100,
       editable: true,
       required: true,
+      sorter: {
+        compare: (a, b) => a.kelompok.localeCompare(b.kelompok),
+      },
+      ...getColumnSearchProps("kelompok"),
     },
     {
       title: "Satuan",
@@ -56,14 +191,18 @@ const AHSProjectForm = (props) => {
       width: 65,
       editable: true,
       required: false,
+      sorter: {
+        compare: (a, b) => a.satuan.localeCompare(b.satuan),
+      },
+      ...getColumnSearchProps("satuan"),
     },
-    {
-      title: "Koef",
-      dataIndex: "koefisien",
-      width: 65,
-      editable: true,
-      required: false,
-    },
+    // {
+    //   title: "Koef",
+    //   dataIndex: "koefisien",
+    //   width: 65,
+    //   editable: true,
+    //   required: false,
+    // },
     {
       title: "Keterangan",
       dataIndex: "keterangan",
@@ -96,22 +235,31 @@ const AHSProjectForm = (props) => {
           </Tooltip>
         ),
     },
-    {
-      title: " ",
-      dataIndex: "khusus",
-      width: 35,
-    },
+    // {
+    //   title: " ",
+    //   dataIndex: "khusus",
+    //   width: 35,
+    // },
   ];
 
-  let { tahun, projectid } = useParams();
-  const [data, setData] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // MARK: Default Action Setup
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
 
   const onSelectChange = (selectedRowKeys) => {
-    selectedRowKeys[selectedRowKeys.length - 1] = selectedRowKeys[
-      selectedRowKeys.length - 1
-    ].split("-")[0];
+    console.log(selectedRowKeys);
+    console.log("teet");
+    // selectedRowKeys[selectedRowKeys.length - 1] = selectedRowKeys[
+    //   selectedRowKeys.length - 1
+    // ].split("-")[0];
     console.log("selectedRowKeys changed: ", selectedRowKeys);
 
     setSelectedRowKeys(
@@ -200,7 +348,10 @@ const AHSProjectForm = (props) => {
             " " +
             responseBody.message +
             " : " +
-            responseBody.HS.join(", ")
+            responseBody.HS !=
+          null
+            ? responseBody.HS.join(", ")
+            : null
         );
       }
     } catch (err) {
@@ -230,7 +381,8 @@ const AHSProjectForm = (props) => {
             kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
             satuan: ahs.SATUAN_AHS,
             sumber: ahs.SUMBER_AHS,
-            children: ahs.AHS_SUMBER_DETAILs.map((ahsd, i) => {
+            children: [],
+            childrens: ahs.AHS_SUMBER_DETAILs.map((ahsd, i) => {
               return {
                 key: idx.toString() + "-" + i.toString(),
                 id: ahsd.ID_AHS_SUMBER_DETAIL,
@@ -258,7 +410,6 @@ const AHSProjectForm = (props) => {
       });
   }, []);
 
-  console.log(columns.length);
   return (
     <>
       <Drawer

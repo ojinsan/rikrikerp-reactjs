@@ -490,7 +490,7 @@ const AHSProjectTable = (props) => {
     try {
       const row = await form.validateFields();
       console.log(row);
-      const newData = [...data];
+      const newData = [...props.AHSPs.data];
       const keysTemp = key.split("-");
       if (keysTemp.length == 2) {
         var childIndex = null;
@@ -532,18 +532,30 @@ const AHSProjectTable = (props) => {
         }
       } else {
         console.log("utama ngedit");
+
+        console.log("Table page: edit AHS P utama");
         const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-          console.log("ketemu");
-          const item = newData[index];
-          newData.splice(index, 1, { ...item, ...row });
-          setData(newData);
-          setEditingKey("");
-        } else {
-          newData.push(row);
-          setData(newData);
-          setEditingKey("");
-        }
+        console.log(row);
+        const editedContent = {
+          ID_AHS_PROJECT_UTAMA: newData[index].id,
+          NAMA_AHS: row.nameBaru,
+          NOMOR_AHS: newData[index].noAHS,
+          SUMBER_AHS: row.sumber,
+          SATUAN_AHS: row.satuan,
+          KHUSUS: row.kelompok == "Non-khusus" ? false : true,
+          KETERANGAN: row.keterangan,
+        };
+
+        props.dispatch({
+          type: "ACTION_SELECTED",
+          payload: {
+            option: "UPDATE",
+            index: index,
+            newData: editedContent,
+            row: { ...row, key: key },
+          },
+        });
+        setEditingKey("");
       }
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
