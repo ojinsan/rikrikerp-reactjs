@@ -9,7 +9,7 @@ export const globalVariable = (request) => {
     case "backendAddress":
       //return "http://35.186.157.80:8080"
       //return "http://192.168.100.78:8080"
-      //return "http://localhost:8080";
-      return "http://18.141.192.214:8080";
+      return "http://localhost:8080";
+    //return "http://18.141.192.214:8080";
   }
 };

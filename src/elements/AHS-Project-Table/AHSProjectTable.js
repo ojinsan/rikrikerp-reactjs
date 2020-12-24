@@ -27,6 +27,7 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
+  //console.log(record);
   var required = true;
   if (
     dataIndex == "noAHS" ||
@@ -94,7 +95,9 @@ const AHSProjectTable = (props) => {
 
       (function recurse(record) {
         console.log(record);
-        values.push(record[dataIndex].toString().toLowerCase());
+        if (record[dataIndex] != undefined) {
+          values.push(record[dataIndex].toString().toLowerCase());
+        }
         record.hasOwnProperty("children") && record.children.forEach(recurse);
       })(record);
 
