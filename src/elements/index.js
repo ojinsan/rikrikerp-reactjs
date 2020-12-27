@@ -13,6 +13,7 @@ import HSSelection from "./HS-Selection/HSSelection";
 
 import AHSProjectForm from "./AHS-Project-Form/AHSProjectForm";
 import AHSProjectTable from "./AHS-Project-Table/AHSProjectTable";
+import AHSProjectLookup from "./AHS-Project-Lookup/AHSProjectLookup";
 
 import ProjectForm from "./Project-Form/ProjectForm";
 import ProjectTable from "./Project-Table/ProjectTable";
@@ -38,6 +39,7 @@ export {
   HSSelection,
   AHSProjectForm,
   AHSProjectTable,
+  AHSProjectLookup,
   ProjectForm,
   ProjectTable,
   RABProjectBagianForm,

@@ -543,30 +543,8 @@ const RABForm = (props) => {
                 </Form.Item>
               </Col>
             )}
-
-            {
-              //detail
-              // satuan
-              // volume
-              // upahNonTdp
-              // bahanNonTdp
-              // pm
-              //                 "itemPekerjaan",
-              // "noUrut1",
-              // "noUrut2",
-              // "noUrut3",
-              // "noUrut4",
-              // "noUrut5",
-              // "detail",
-              // "ahsUtamaProjectId",
-              // "satuan",
-              // "volume",
-              // "upahNonTdp",
-              // "bahanNonTdp",
-              // "pm",
-            }
           </Row>
-          {detail && (
+          {detail && !pm && (
             <Row gutter={16}>
               <Col span={4}>
                 <Form.Item

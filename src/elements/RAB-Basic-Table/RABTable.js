@@ -11,7 +11,7 @@ import {
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
-import { HSSelection } from "../../elements";
+import { HSSelection, AHSProjectLookup } from "../../elements";
 import { useHistory, useParams } from "react-router-dom";
 
 const EditableCell = ({
@@ -67,6 +67,11 @@ const RABTable = (props) => {
   const [filteredInfo, setFilteredInfo] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+
+  const [idAHSProjectUtama, setIdAHSProjectUtama] = useState(null);
+  const [showAHSProjectLookup, setShowAHSProjectLookup] = useState(false);
+  const [idRABDetail, setIdRABDetail] = useState(null);
+
   var searchInput = "";
   let { projectid, tahun, rabprojectbagianid } = useParams();
   const history = useHistory();
@@ -196,7 +201,12 @@ const RABTable = (props) => {
         return (
           <div
             onClick={() => {
-              history.push("/ahsproject/" + tahun + "/" + projectid);
+              console.log(record);
+              //   history.push("/ahsproject/" + tahun + "/" + projectid);
+              console.log("id rab detail: ", record.idRabDetail);
+              setIdRABDetail(record.idRabDetail);
+              setShowAHSProjectLookup(true);
+              setIdAHSProjectUtama(record.idAHSProjectUtama);
             }}
           >
             {record.itemPekerjaan}
@@ -443,6 +453,21 @@ const RABTable = (props) => {
           size="small"
         />
       </Form>
+      {showAHSProjectLookup && (
+        <AHSProjectLookup
+          showDrawer={() => {
+            setShowAHSProjectLookup(true);
+          }}
+          onClose={() => {
+            setShowAHSProjectLookup(false);
+          }}
+          TAHUN={props.tahun}
+          visible={showAHSProjectLookup}
+          ID_AHS_PROJECT_UTAMA={idAHSProjectUtama}
+          ID_RAB_DETAIL={idRABDetail}
+          dispatch={props.dispatch}
+        />
+      )}
     </div>
   );
 };
