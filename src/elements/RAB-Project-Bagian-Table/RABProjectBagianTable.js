@@ -11,7 +11,10 @@ import {
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
+// IMPORT: Utilities
+import { globalVariable } from "../../utils/global-variable";
+const hostname = globalVariable("backendAddress");
 
 const EditableCell = ({
   editing,
@@ -310,6 +313,18 @@ const RABProjectBagianTable = (props) => {
             >
               <a> Delete </a>
             </Popconfirm>
+            <a
+              //href="http://tokopedia.com"
+              href={
+                hostname +
+                "/excel/generate-excel?TAHUN=" +
+                props.tahun +
+                "&ID_RAB_PROJECT_BAGIAN=" +
+                record.idRABPB
+              }
+            >
+              Print
+            </a>
           </div>
         );
       },
