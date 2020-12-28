@@ -341,13 +341,16 @@ const AHSProjectForm = (props) => {
           },
         });
       } else {
+        console.log("here!");
         const responseBody = await response.json();
         throw new Error(
-          "Gagal menyimpan dalam database. Status: " +
-            response.status +
-            " " +
-            responseBody.message +
-            " : " +
+          responseBody.message +
+            //"Gagal menyimpan AHS yang sama"
+            //  +
+            //   response.status +
+            //   " " +
+            //   responseBody.message +
+            //   " : " +
             responseBody.HS !=
           null
             ? responseBody.HS.join(", ")

@@ -198,20 +198,7 @@ const RABTable = (props) => {
       ...getColumnSearchProps("itemPekerjaan"),
       render: (_, record) => {
         console.log(record);
-        return (
-          <div
-            onClick={() => {
-              console.log(record);
-              //   history.push("/ahsproject/" + tahun + "/" + projectid);
-              console.log("id rab detail: ", record.idRabDetail);
-              setIdRABDetail(record.idRabDetail);
-              setShowAHSProjectLookup(true);
-              setIdAHSProjectUtama(record.idAHSProjectUtama);
-            }}
-          >
-            {record.itemPekerjaan}
-          </div>
-        );
+        return <div>{record.itemPekerjaan}</div>;
       },
     },
     {
@@ -314,6 +301,18 @@ const RABTable = (props) => {
             >
               <a> Delete </a>
             </Popconfirm>
+            <a
+              onClick={() => {
+                console.log(record);
+                //   history.push("/ahsproject/" + tahun + "/" + projectid);
+                console.log("id rab detail: ", record.idRabDetail);
+                setIdRABDetail(record.idRabDetail);
+                setShowAHSProjectLookup(true);
+                setIdAHSProjectUtama(record.idAHSProjectUtama);
+              }}
+            >
+              Edit AHS
+            </a>
           </div>
         );
       },

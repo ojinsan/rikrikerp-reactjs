@@ -240,6 +240,7 @@ const RABForm = (props) => {
             });
           }
         } catch (err) {
+          console.log("Something went wrong here");
           alert(err.message);
           console.log(err);
         }
