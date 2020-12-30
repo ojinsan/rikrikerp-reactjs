@@ -71,12 +71,12 @@ const RABForm = (props) => {
   const [noUrut3, setNoUrut3] = useState(0);
   const [noUrut4, setNoUrut4] = useState(0);
   const [noUrut5, setNoUrut5] = useState(0);
-  const [detail, setDetail] = useState(false);
+  const [detail, setDetail] = useState(true);
   const [ahsUtamaProjectId, setAhsUtamaProjectId] = useState(null);
   const [satuan, setSatuan] = useState("");
   const [volume, setVolume] = useState("");
   const [upahNonTdp, setUpahNonTdp] = useState(true);
-  const [bahanNonTdp, setBahanNonTdp] = useState(false);
+  const [bahanNonTdp, setBahanNonTdp] = useState(true);
   const [pm, setPm] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -107,12 +107,12 @@ const RABForm = (props) => {
     setNoUrut3(0);
     setNoUrut4(0);
     setNoUrut5(0);
-    setDetail(false);
+    setDetail(true);
     setAhsUtamaProjectId(null);
     setSatuan("");
     setVolume("");
     setUpahNonTdp(true);
-    setBahanNonTdp(false);
+    setBahanNonTdp(true);
     setPm(false);
     Pform.resetFields();
   };
@@ -196,10 +196,6 @@ const RABForm = (props) => {
     Pform.validateFields([
       "itemPekerjaan",
       "noUrut1",
-      "noUrut2",
-      "noUrut3",
-      "noUrut4",
-      "noUrut5",
       "detail",
       "ahsUtamaProjectId",
       "satuan",
@@ -251,19 +247,6 @@ const RABForm = (props) => {
       });
   };
 
-  //     itemPekerjaan
-  // noUrut1
-  // noUrut2
-  // noUrut3
-  // noUrut4
-  // noUrut5
-  // detail
-  // ahsUtamaProjectId
-  // satuan
-  // volume
-  // upahNonTdp
-  // bahanNonTdp
-  // pm
   return (
     <div>
       <Drawer
@@ -405,23 +388,24 @@ const RABForm = (props) => {
             <Col span={4}>
               <Form.Item
                 name="detail"
-                label="Jumlah Detail"
+                label="Detail"
                 rules={[
                   {
                     required: true,
                     message: "Jumlah Detail Harus Terisi",
                   },
                 ]}
+                initialValue={true}
               >
                 <Select
                   placeholder="Apakah Ada Detail?"
                   onChange={(e) => setDetail(e)}
                 >
-                  <Option key="false" value={false}>
-                    TIDAK
-                  </Option>
                   <Option key="true" value={true}>
                     YA
+                  </Option>
+                  <Option key="false" value={false}>
+                    TIDAK
                   </Option>
                 </Select>
               </Form.Item>
@@ -503,7 +487,7 @@ const RABForm = (props) => {
                       message: "Pilihan harus terisi",
                     },
                   ]}
-                  initialValue={false}
+                  initialValue={true}
                 >
                   <Select
                     placeholder="Pilih jenis"

@@ -97,6 +97,7 @@ function dataReducer(state, action) {
 }
 
 const AHSProject = (props) => {
+  const [showHSForm, setShowHSForm] = useState(false);
   const [showAHSProjectForm, setShowAHSProjectForm] = useState(false);
   const [wilayahProject, setWilayahProject] = useState(null);
   let { tahun, projectid } = useParams();

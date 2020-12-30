@@ -9,7 +9,7 @@ import { RABForm, RABTable, HSWilayahTahunSelector } from "../../elements";
 import { SortBox } from "../../components";
 import { globalVariable } from "../../utils/global-variable";
 
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 const hostname = globalVariable("backendAddress");
 
@@ -84,6 +84,7 @@ function dataReducer(state, action) {
 }
 
 const RAB = () => {
+  let history = useHistory();
   let { tahun, rabprojectbagianid } = useParams();
   const RABPB_ID = rabprojectbagianid;
   const [showRABForm, setShowRABForm] = useState(false);
@@ -261,15 +262,33 @@ const RAB = () => {
     <>
       <div className="d-flex justify-content-between align-items-center">
         <h4>This is List of RAB Page</h4>
-        <Button
-          type="primary"
-          className="d-flex p-2 align-items-center"
-          onClick={() => {
-            setShowRABForm(!showRABForm);
-          }}
-        >
-          <PlusOutlined /> New RAB
-        </Button>
+
+        <div className="d-flex justify-content-center align-items-center">
+          <Button
+            type="primary"
+            className="d-flex p-2 align-items-center"
+            href={
+              hostname +
+              "/excel/generate-excel?TAHUN=" +
+              tahun +
+              "&ID_RAB_PROJECT_BAGIAN=" +
+              RABPB_ID
+            }
+            style={{ margin: 10 }}
+          >
+            {/* <PlusOutlined /> Print */}
+            Print
+          </Button>
+          <Button
+            type="primary"
+            className="d-flex p-2 align-items-center"
+            onClick={() => {
+              setShowRABForm(!showRABForm);
+            }}
+          >
+            <PlusOutlined /> New RAB
+          </Button>
+        </div>
       </div>
       <RABForm
         showDrawer={() => {

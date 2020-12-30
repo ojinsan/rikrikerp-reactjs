@@ -13,14 +13,6 @@ import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 
-// ID_PROJECT": 1,
-//             "NAMA_PROJECT": "Matul",
-//             "TAHUN": "2012",
-//             "createdAt": "2020-10-16T07:27:02.000Z",
-//             "updatedAt": "2020-10-16T07:27:02.000Z",
-//             "ID_WILAYAH": 112,
-//             "WILAYAH": {
-
 const EditableCell = ({
   editing,
   dataIndex,

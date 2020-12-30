@@ -215,8 +215,8 @@ const HSForm = (props) => {
                   onChange={(e) => setType(e)}
                   value={type}
                 >
-                  <Option value="Upah">UPAH</Option>
-                  <Option value="Bahan">BAHAN</Option>
+                  <Option value="Upah">UPAH / JASA</Option>
+                  <Option value="Bahan">ALAT / BAHAN</Option>
                 </Select>
               </Form.Item>
             </Col>

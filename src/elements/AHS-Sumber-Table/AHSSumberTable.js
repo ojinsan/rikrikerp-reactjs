@@ -8,11 +8,13 @@ import {
   Tooltip,
   Space,
   Button,
+  Select,
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 // IMPORT: Other Elements
 import { AHSSumberDetailForm } from "../../elements";
+const { Option } = Select;
 
 const EditableCell = ({
   editing,
@@ -36,9 +38,31 @@ const EditableCell = ({
     required = false;
   }
 
-  var inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+  console.log(inputType);
+  var inputNode =
+    inputType === "number" ? (
+      <InputNumber />
+    ) : inputType === "skip" ? null : (
+      <Input />
+    );
   record &&
     (inputNode = record.isAHS && dataIndex == "koefisien" ? null : inputNode);
+
+  record &&
+    (inputNode =
+      !record.isAHS && dataIndex == "kelompok" ? (
+        <Select placeholder="Apakah Ada Detail?">
+          <Option key="Upah" value="Upah">
+            Upah
+          </Option>
+          <Option key="Bahan" value={"Bahan"}>
+            Bahan
+          </Option>
+        </Select>
+      ) : (
+        inputNode
+      ));
+
   return (
     <td {...restProps}>
       {editing && !(record.isAHS && dataIndex == "koefisien") ? (
@@ -337,7 +361,12 @@ const AHSSumberTable = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === "koefisien" ? "number" : "text",
+        inputType:
+          col.dataIndex === "koefisien"
+            ? "number"
+            : col.dataIndex === "kelompok"
+            ? "select"
+            : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -420,25 +449,6 @@ const AHSSumberTable = (props) => {
           },
         });
         setEditingKey("");
-
-        // if (index > -1) {
-        //     console.log("sini");
-        //     const item = newData[index].children[childIndex];
-        //     console.log(item);
-        //     console.log({ ...item, ...row });
-        //     newData[index].children.splice(childIndex, 1, {
-        //         ...item,
-        //         ...row,
-        //     });
-        //     console.log(newData);
-        //     setData(newData);
-        //     setEditingKey("");
-        // } else {
-        //     console.log("situ");
-        //     newData.push(row);
-        //     setData(newData);
-        //     setEditingKey("");
-        // }
       } else {
         console.log("Table page: edit AHS utama");
         const index = newData.findIndex((item) => key === item.key);
@@ -543,91 +553,7 @@ const AHSSumberTable = (props) => {
       console.log("Validate Failed:", errInfo);
     }
     ///////////////////////////
-    // const keysTemp = key.split("-");
-    // console.log(keysTemp);
-    // const dataSource = [...data];
-    // if (keysTemp.length == 2) {
-    //     const index = dataSource.findIndex((item) => {
-    //         if (item.children !== undefined && item.children !== null) {
-    //             const childIndex = item.children.findIndex(
-    //                 (child) => key === child.key
-    //             );
-    //             if (childIndex == null) {
-    //                 return false;
-    //             } else {
-    //                 return true;
-    //             }
-    //         } else {
-    //             return key === item.key;
-    //         }
-    //     });
-    //     console.log(index);
-    //     dataSource[index].children = dataSource[index].children.filter(
-    //         (child) => {
-    //             console.log(child.key);
-    //             console.log(key);
-    //             return child.key !== key;
-    //         }
-    //     );
-    //     console.log(dataSource[index].children);
-    //     if (dataSource[index].children.length == 0) {
-    //         console.log("nah");
-    //         delete dataSource[index]["children"];
-    //     }
-    //     console.log(key);
-    //     console.log(dataSource);
-    //     setData(dataSource);
-    // } else {
-    //     setData(dataSource.filter((item) => item.key !== key));
-    // }
   };
-
-  // useEffect(() => {
-  //     fetch(hostname + "/data-source/get-ahs-sumber-full-data", {
-  //         headers: {
-  //             "Content-Type": "application/json",
-  //             Accept: "application/json",
-  //         },
-  //     })
-  //         .then((response) => response.json())
-  //         .then((response) => {
-  //             console.log(response);
-  //             var tableData = response.AHS.map((ahs, idx) => {
-  //                 const data = {
-  //                     id: ahs.ID_AHS_SUMBER_UTAMA,
-  //                     isAHS: true,
-  //                     key: idx.toString(),
-  //                     name: ahs.NAMA_AHS,
-  //                     noAHS: ahs.NOMOR_AHS,
-  //                     kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
-  //                     satuan: ahs.SATUAN_AHS,
-  //                     sumber: ahs.SUMBER_AHS,
-  //                     children: ahs.AHS_SUMBER_DETAILs.map((ahsd, i) => {
-  //                         return {
-  //                             key: idx.toString() + "-" + i.toString(),
-  //                             id: ahsd.ID_AHS_SUMBER_DETAIL,
-  //                             isAHS: false,
-  //                             name: ahsd.URAIAN,
-  //                             kodeUraian: ahsd.KODE_URAIAN,
-  //                             noAHS: ahsd.ID_AHS_SUMBER_UTAMA,
-  //                             kelompok: ahsd.KELOMPOK_URAIAN,
-  //                             satuan: ahsd.SATUAN_URAIAN,
-  //                             koefisien: ahsd.KOEFISIEN_URAIAN,
-  //                             keterangan: ahsd.KETERANGAN_URAIAN,
-  //                         };
-  //                     }),
-  //                 };
-  //                 if (data.children.length == 0) {
-  //                     delete data.children;
-  //                 }
-  //                 return data;
-  //             });
-  //             return tableData;
-  //         })
-  //         .then((tableData) => {
-  //             setData(tableData);
-  //         });
-  // }, []);
 
   return (
     <>

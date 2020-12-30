@@ -234,7 +234,7 @@ const AHSProjectTable = (props) => {
           <div
             onClick={() => {
               setIdAHSSumberUtama(record.id);
-              setShowAHSSumberLookup(true);
+              //setShowAHSSumberLookup(true);
             }}
           >
             {record.nameBaru}
@@ -444,49 +444,6 @@ const AHSProjectTable = (props) => {
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
-
-    // const keysTemp = key.split("-");
-    // console.log(keysTemp);
-    // const dataSource = [...data];
-    // if (keysTemp.length == 2) {
-    //     const index = dataSource.findIndex((item) => {
-    //         if (item.children !== undefined && item.children !== null) {
-    //             const childIndex = item.children.findIndex(
-    //                 (child) => key === child.key
-    //             );
-    //             if (childIndex == null) {
-    //                 return false;
-    //             } else {
-    //                 return true;
-    //             }
-    //         } else {
-    //             return key === item.key;
-    //         }
-    //     });
-
-    //     console.log(index);
-
-    //     dataSource[index].children = dataSource[index].children.filter(
-    //         (child) => {
-    //             console.log(child.key);
-    //             console.log(key);
-    //             return child.key !== key;
-    //         }
-    //     );
-
-    //     console.log(dataSource[index].children);
-    //     if (dataSource[index].children.length == 0) {
-    //         console.log("nah");
-    //         delete dataSource[index]["children"];
-    //     }
-
-    //     console.log(key);
-    //     console.log(dataSource);
-
-    //     setData(dataSource);
-    // } else {
-    //     setData(dataSource.filter((item) => item.key !== key));
-    // }
   };
 
   const save = async (key) => {
@@ -564,76 +521,6 @@ const AHSProjectTable = (props) => {
       console.log("Validate Failed:", errInfo);
     }
   };
-
-  // const mergedColumns = columns.map((col) => {
-  //   if (!col.editable) {
-  //     return col;
-  //   }
-
-  //   return {
-  //     ...col,
-  //     onCell: (record) => ({
-  //       record,
-  //       inputType: col.dataIndex === "koefisien" ? "number" : "text",
-  //       dataIndex: col.dataIndex,
-  //       title: col.title,
-  //       editing: isEditing(record),
-  //     }),
-  //   };
-  // });
-
-  //   useEffect(() => {
-  //     fetch(hostname + "/project/get-ahs-project-full-data?TAHUN=" + "2020", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       },
-  //     })
-  //       .then((response) => response.json())
-  //       .then((response) => {
-  //         console.log(response);
-  //         var tableData = response.AHS_PROJECT_UTAMA.map((ahs, idx) => {
-  //           const data = {
-  //             noUrut: ahs.NO_URUT,
-  //             id: ahs.ID_AHS_PROJECT_UTAMA,
-  //             isAHS: true,
-  //             key: idx.toString(),
-  //             nameBaru: ahs.NAMA_AHS_PROJECT,
-  //             nameOri: ahs.AHS_SUMBER_UTAMA.NAMA_AHS,
-  //             noAHS: ahs.NOMOR_AHS_PROJECT,
-  //             kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
-  //             satuan: ahs.AHS_SUMBER_UTAMA.SATUAN_AHS,
-  //             sumber: ahs.AHS_SUMBER_UTAMA.SUMBER_AHS,
-  //             koefisien: ahs.KOEFISIEN_AHS,
-  //             keterangan: ahs.PENJELASAN_KOEFISIEN_AHS,
-
-  //             children: ahs.AHS_PROJECT_DETAIL.map((ahsd, i) => {
-  //               return {
-  //                 key: idx.toString() + "-" + i.toString(),
-  //                 id: ahsd.ID_AHS_PROJECT_DETAIL,
-  //                 isAHS: false,
-  //                 name: ahsd.P_URAIAN,
-  //                 kodeUraian: ahsd.KODE_URAIAN,
-  //                 //noAHS: ahsd.ID_AHS_SUMBER_UTAMA,
-  //                 kelompok: ahsd.P_KELOMPOK_URAIAN,
-  //                 satuan: ahsd.P_SATUAN_URAIAN,
-  //                 koefisien: ahsd.P_KOEFISIEN_URAIAN,
-  //                 keterangan: ahsd.P_KETERANGAN_URAIAN,
-  //                 HS: ahsd.hs ? ahsd.HS.HARGA : 0,
-  //               };
-  //             }),
-  //           };
-  //           if (data.children.length == 0) {
-  //             delete data.children;
-  //           }
-  //           return data;
-  //         });
-  //         return tableData;
-  //       })
-  //       .then((tableData) => {
-  //         setData(tableData);
-  //       });
-  //   }, []);
 
   return (
     <>

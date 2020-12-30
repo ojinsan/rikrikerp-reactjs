@@ -301,18 +301,20 @@ const RABTable = (props) => {
             >
               <a> Delete </a>
             </Popconfirm>
-            <a
-              onClick={() => {
-                console.log(record);
-                //   history.push("/ahsproject/" + tahun + "/" + projectid);
-                console.log("id rab detail: ", record.idRabDetail);
-                setIdRABDetail(record.idRabDetail);
-                setShowAHSProjectLookup(true);
-                setIdAHSProjectUtama(record.idAHSProjectUtama);
-              }}
-            >
-              Edit AHS
-            </a>
+            {record.detail == "yes" && record.pm == "no" && (
+              <a
+                onClick={() => {
+                  console.log(record);
+                  //   history.push("/ahsproject/" + tahun + "/" + projectid);
+                  console.log("id rab detail: ", record.idRabDetail);
+                  setIdRABDetail(record.idRabDetail);
+                  setShowAHSProjectLookup(true);
+                  setIdAHSProjectUtama(record.idAHSProjectUtama);
+                }}
+              >
+                Edit AHS
+              </a>
+            )}
           </div>
         );
       },
