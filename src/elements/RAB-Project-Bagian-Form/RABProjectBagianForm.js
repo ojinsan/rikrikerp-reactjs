@@ -33,6 +33,7 @@ var Pform = null; // form reference
 const RABProjectBagian = (props) => {
   const [jenis, setJenis] = useState("");
   const [bagian, setBagian] = useState("");
+  const [bagianOther, setBagianOther] = useState(false);
   const [subBagian, setSubBagian] = useState("");
   const [idTtd, setIdTtd] = useState("");
   const [keteranganJudulRekap, setKeteranganJudulRekap] = useState("");
@@ -196,7 +197,14 @@ const RABProjectBagian = (props) => {
               >
                 <Select
                   placeholder="Pilih jenis"
-                  onChange={(e) => setBagian(e)}
+                  onChange={(e) => {
+                    if (e == "Other") {
+                      setBagianOther(true);
+                    } else {
+                      setBagian(e);
+                      setBagianOther(false);
+                    }
+                  }}
                 >
                   {[
                     "Track",
@@ -206,6 +214,7 @@ const RABProjectBagian = (props) => {
                     "Sinyal",
                     "Telekomunikasi",
                     "Listrik Aliran Atas",
+                    "Other",
                   ].map((name) => (
                     <Option key={name} value={name}>
                       {name}
@@ -214,6 +223,27 @@ const RABProjectBagian = (props) => {
                 </Select>
               </Form.Item>
             </Col>
+
+            {bagianOther && (
+              <Col span={8}>
+                <Form.Item
+                  name=""
+                  label="Bagian Other"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Nama bagian harus terisi",
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder="Masukan sub bagian"
+                    onChange={(e) => setBagian(e.target.value)}
+                  />
+                </Form.Item>
+              </Col>
+            )}
+
             <Col span={8}>
               <Form.Item
                 name="subBagian"

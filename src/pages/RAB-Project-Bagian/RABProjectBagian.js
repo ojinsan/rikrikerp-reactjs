@@ -72,7 +72,7 @@ function dataReducer(state, action) {
     }
     case "FETCH_DATA_SUCCESS": {
       console.log("dispatch fetch success");
-      console.log(action.payload);
+      //console.log(action.payload);
       return {
         ...state,
         loading: false,
@@ -128,6 +128,7 @@ const RABProjectBagian = () => {
         .then((response) => {
           var j = 0;
           var tableData = [];
+          console.log(response.RABProjectBagian);
           response.RABProjectBagian &&
             (tableData = response.RABProjectBagian.map((rabpb, idx) => {
               const data = {

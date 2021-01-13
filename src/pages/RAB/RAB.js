@@ -136,6 +136,7 @@ const RAB = () => {
                 noUrut4: RAB.NO_URUT_4,
                 noUrut5: RAB.NO_URUT_5,
                 detail: RAB.DETAIL ? "yes" : "no",
+                idRabJudul: RAB.ID_RAB_JUDUL,
 
                 idRabDetail: RAB.DETAIL
                   ? RAB.RAB_DETAILS[0].ID_RAB_DETAIL
@@ -153,7 +154,7 @@ const RAB = () => {
                     : "no"
                   : null,
                 pm: RAB.DETAIL ? (RAB.RAB_DETAILS[0].PM ? "yes" : "no") : null,
-                idRabJudul: RAB.DETAIL ? RAB.RAB_DETAILS[0].ID_RAB_JUDUL : null,
+                //idRabJudul: RAB.DETAIL ? RAB.RAB_DETAILS[0].ID_RAB_JUDUL : null,
                 idAHSProjectUtama: RAB.DETAIL
                   ? RAB.RAB_DETAILS[0].ID_AHS_PROJECT_UTAMA
                   : null,
