@@ -139,24 +139,24 @@ const RAB = () => {
                 idRabJudul: RAB.ID_RAB_JUDUL,
 
                 idRabDetail: RAB.DETAIL
-                  ? RAB.RAB_DETAILS[0].ID_RAB_DETAIL
+                  ? RAB.RAB_DETAILS[0]?.ID_RAB_DETAIL
                   : null,
-                satuan: RAB.DETAIL ? RAB.RAB_DETAILS[0].SATUAN : null,
-                volume: RAB.DETAIL ? RAB.RAB_DETAILS[0].VOLUME : null,
+                satuan: RAB.DETAIL ? RAB.RAB_DETAILS[0]?.SATUAN : null,
+                volume: RAB.DETAIL ? RAB.RAB_DETAILS[0]?.VOLUME : null,
                 upahNonTdp: RAB.DETAIL
-                  ? RAB.RAB_DETAILS[0].UPAH_NON_TDP
+                  ? RAB.RAB_DETAILS[0]?.UPAH_NON_TDP
                     ? "yes"
                     : "no"
                   : null,
                 bahanNonTdp: RAB.DETAIL
-                  ? RAB.RAB_DETAILS[0].BAHAN_NON_TDP
+                  ? RAB.RAB_DETAILS[0]?.BAHAN_NON_TDP
                     ? "yes"
                     : "no"
                   : null,
-                pm: RAB.DETAIL ? (RAB.RAB_DETAILS[0].PM ? "yes" : "no") : null,
+                pm: RAB.DETAIL ? (RAB.RAB_DETAILS[0]?.PM ? "yes" : "no") : null,
                 //idRabJudul: RAB.DETAIL ? RAB.RAB_DETAILS[0].ID_RAB_JUDUL : null,
                 idAHSProjectUtama: RAB.DETAIL
-                  ? RAB.RAB_DETAILS[0].ID_AHS_PROJECT_UTAMA
+                  ? RAB.RAB_DETAILS[0]?.ID_AHS_PROJECT_UTAMA
                   : null,
 
                 key: j.toString(),

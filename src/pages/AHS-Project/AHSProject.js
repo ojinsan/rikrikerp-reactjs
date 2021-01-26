@@ -120,12 +120,19 @@ const AHSProject = (props) => {
     setShowAHSProjectForm(false);
     if (AHSPs.selectedOption === "FETCH" && tahun) {
       // dispatch({ type: "FETCH_DATA" });
-      fetch(hostname + "/project/get-ahs-project-full-data?TAHUN=" + tahun, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
+      fetch(
+        hostname +
+          "/project/get-ahs-project-full-data?TAHUN=" +
+          tahun +
+          "&ID_PROJECT=" +
+          projectid,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      )
         .then((response) => response.json())
         .then((response) => {
           console.log(response);

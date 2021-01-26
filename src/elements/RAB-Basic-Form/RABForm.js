@@ -22,6 +22,8 @@ import { globalVariable } from "../../utils/global-variable";
 // IMPORT: Other Components
 import { LoadingSpinner } from "../../components";
 
+import { useParams } from "react-router-dom";
+
 // SETUP: Initial
 const hostname = globalVariable("backendAddress");
 const { Option } = Select;
@@ -62,7 +64,8 @@ const RABForm = (props) => {
   //     BAHAN_NON_TDP: false,
   //     PM: false,
   // };
-  const idRabProjectBagian = 1;
+
+  let { tahun, projectid } = useParams();
 
   //const [idRabProjectBagian, setIdRabProjectBagian] = useState("")
   const [itemPekerjaan, setItemPekerjaan] = useState("");
@@ -119,7 +122,11 @@ const RABForm = (props) => {
 
   useEffect(() => {
     fetch(
-      hostname + "/project/get-ahs-project-full-data?TAHUN=" + props.tahun,
+      hostname +
+        "/project/get-ahs-project-full-data?TAHUN=" +
+        props.tahun +
+        "&ID_PROJECT=" +
+        projectid,
       {
         headers: {
           "Content-Type": "application/json",
