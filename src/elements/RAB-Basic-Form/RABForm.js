@@ -144,7 +144,7 @@ const RABForm = (props) => {
             isAHS: true,
             key: idx.toString(),
             nameBaru: ahs.NAMA_AHS_PROJECT,
-            nameOri: ahs.AHS_SUMBER_UTAMA.NAMA_AHS,
+            nameOri: ahs.AHS_SUMBER_UTAMA?.NAMA_AHS,
             noAHS: ahs.NOMOR_AHS_PROJECT,
             kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
             satuan: ahs.AHS_SUMBER_UTAMA.SATUAN_AHS,

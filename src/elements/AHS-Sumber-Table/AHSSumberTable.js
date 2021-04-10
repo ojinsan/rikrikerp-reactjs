@@ -219,7 +219,11 @@ const AHSSumberTable = (props) => {
       editable: true,
       required: false,
       sorter: {
-        compare: (a, b) => a.sumber.localeCompare(b.sumber),
+        compare: (a, b) => {
+          if (a.sumber != undefined && a.sumber != null) {
+            return a.sumber.localeCompare(b.sumber);
+          } else return true;
+        },
       },
       ...getColumnSearchProps("sumber"),
     },
@@ -273,9 +277,13 @@ const AHSSumberTable = (props) => {
         showTitle: true,
       },
       sorter: {
-        compare: (a, b) => a.keterangan.localeCompare(b.keterangan),
+        compare: (a, b) => {
+          if (a.keterangan != undefined && a.keterangan != null) {
+            return a.keterangan.localeCompare(b.keterangan);
+          } else return true;
+        },
       },
-      ...getColumnSearchProps("name"),
+      ...getColumnSearchProps("keterangan"),
       render: (keterangan) => (
         <Tooltip placement="topLeft" title={keterangan}>
           {keterangan}
