@@ -147,7 +147,7 @@ const RABForm = (props) => {
             nameOri: ahs.AHS_SUMBER_UTAMA?.NAMA_AHS,
             noAHS: ahs.NOMOR_AHS_PROJECT,
             kelompok: ahs.KHUSUS ? "Khusus" : "Non-Khusus",
-            satuan: ahs.AHS_SUMBER_UTAMA.SATUAN_AHS,
+            satuan: ahs.AHS_SUMBER_UTAMA?.SATUAN_AHS,
             sumber: ahs.AHS_SUMBER_UTAMA.SUMBER_AHS,
             koefisien: ahs.KOEFISIEN_AHS,
             keterangan: ahs.PENJELASAN_KOEFISIEN_AHS,
