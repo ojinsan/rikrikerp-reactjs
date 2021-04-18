@@ -109,7 +109,7 @@ const AHSSumberTable = (props) => {
 
       (function recurse(record) {
         console.log(record);
-        values.push(record[dataIndex].toString().toLowerCase());
+        values.push(record[dataIndex]?.toString().toLowerCase());
         record.hasOwnProperty("children") && record.children.forEach(recurse);
       })(record);
 
@@ -167,9 +167,9 @@ const AHSSumberTable = (props) => {
         const recordName = record[dataIndex] || record.children[dataIndex];
         const searchLower = value.toLowerCase();
         return (
-          recordName.toString().toLowerCase().includes(searchLower) ||
+          recordName.toString().toLowerCase()?.includes(searchLower) ||
           getDescendantValues(record).some((descValue) =>
-            descValue.includes(searchLower)
+            descValue?.includes(searchLower)
           )
         );
       },

@@ -96,7 +96,7 @@ const AHSProjectTable = (props) => {
       (function recurse(record) {
         console.log(record);
         if (record[dataIndex] != undefined) {
-          values.push(record[dataIndex].toString().toLowerCase());
+          values.push(record[dataIndex]?.toString().toLowerCase());
         }
         record.hasOwnProperty("children") && record.children.forEach(recurse);
       })(record);
@@ -155,9 +155,9 @@ const AHSProjectTable = (props) => {
         const recordName = record[dataIndex] || record.children[dataIndex];
         const searchLower = value.toLowerCase();
         return (
-          recordName.toString().toLowerCase().includes(searchLower) ||
+          recordName.toString().toLowerCase()?.includes(searchLower) ||
           getDescendantValues(record).some((descValue) =>
-            descValue.includes(searchLower)
+            descValue?.includes(searchLower)
           )
         );
       },
@@ -210,11 +210,11 @@ const AHSProjectTable = (props) => {
     {
       title: "Sumber",
       dataIndex: "sumber",
-      width: "15%",
+      width: "22%",
       editable: true,
       required: false,
       sorter: {
-        compare: (a, b) => a.sumber.localeCompare(b.sumber),
+        compare: (a, b) => a.sumber?.localeCompare(b.sumber),
       },
       ...getColumnSearchProps("sumber"),
     },
@@ -225,7 +225,7 @@ const AHSProjectTable = (props) => {
       editable: true,
       required: true,
       sorter: {
-        compare: (a, b) => a.nameBaru.localeCompare(b.nameBaru),
+        compare: (a, b) => a.nameBaru?.localeCompare(b.nameBaru),
       },
       ...getColumnSearchProps("nameBaru"),
       render: (_, record) => (
@@ -260,7 +260,7 @@ const AHSProjectTable = (props) => {
       editable: true,
       required: true,
       sorter: {
-        compare: (a, b) => a.kelompok.localeCompare(b.kelompok),
+        compare: (a, b) => a.kelompok?.localeCompare(b.kelompok),
       },
       ...getColumnSearchProps("kelompok"),
     },
@@ -271,7 +271,7 @@ const AHSProjectTable = (props) => {
       editable: true,
       required: false,
       sorter: {
-        compare: (a, b) => a.satuan.localeCompare(b.satuan),
+        compare: (a, b) => a.satuan?.localeCompare(b.satuan),
       },
       ...getColumnSearchProps("satuan"),
     },
